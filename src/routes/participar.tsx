@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useForm } from '@tanstack/react-form'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -22,7 +23,7 @@ export const Route = createFileRoute('/participar')({
   component: RouteComponent,
 })
 
-interface FormData {
+interface ParticipacionFormData {
   nombre: string
   correo: string
   tipoComentario: string
@@ -31,52 +32,35 @@ interface FormData {
 }
 
 function RouteComponent() {
-  const [formData, setFormData] = useState<FormData>({
-    nombre: '',
-    correo: '',
-    tipoComentario: '',
-    proyectoRelacionado: '',
-    comentario: '',
-  })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+  // TanStack Form
+  const form = useForm({
+    defaultValues: {
+      nombre: '',
+      correo: '',
+      tipoComentario: '',
+      proyectoRelacionado: '',
+      comentario: '',
+    },
+    onSubmit: async ({ value }: { value: ParticipacionFormData }) => {
+      setIsSubmitting(true)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!formData.tipoComentario || !formData.comentario) {
-      toast.error('Por favor complete los campos requeridos')
-      return
-    }
+      // Simulate API call - replace with actual backend call when ready
+      setTimeout(() => {
+        setIsSubmitting(false)
+        setShowSuccess(true)
+        toast.success('¡Opinión enviada exitosamente!')
+        
+        // Reset form
+        form.reset()
 
-    setIsSubmitting(true)
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setShowSuccess(true)
-      toast.success('¡Opinión enviada exitosamente!')
-      
-      // Reset form
-      setFormData({
-        nombre: '',
-        correo: '',
-        tipoComentario: '',
-        proyectoRelacionado: '',
-        comentario: '',
-      })
-
-      // Hide success message after 5 seconds
-      setTimeout(() => setShowSuccess(false), 5000)
-    }, 1500)
-  }
+        // Hide success message after 5 seconds
+        setTimeout(() => setShowSuccess(false), 5000)
+      }, 1500)
+    },
+  })
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted to-background py-12 px-4">
@@ -169,111 +153,172 @@ function RouteComponent() {
               </AlertDescription>
             </Alert>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                form.handleSubmit()
+              }}
+              className="space-y-6"
+            >
               {/* Optional Fields Row */}
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Nombre */}
-                <div className="space-y-2">
-                  <Label htmlFor="nombre">
-                    Nombre (Opcional)
-                  </Label>
-                  <Input
-                    id="nombre"
-                    name="nombre"
-                    type="text"
-                    value={formData.nombre}
-                    onChange={handleInputChange}
-                    placeholder="Su nombre completo"
-                    className="h-11"
-                  />
-                </div>
+                <form.Field name="nombre">
+                  {(field) => (
+                    <div className="space-y-2">
+                      <Label htmlFor="nombre">
+                        Nombre (Opcional)
+                      </Label>
+                      <Input
+                        id="nombre"
+                        type="text"
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        onBlur={field.handleBlur}
+                        placeholder="Su nombre completo"
+                        className="h-11"
+                      />
+                    </div>
+                  )}
+                </form.Field>
 
                 {/* Correo */}
-                <div className="space-y-2">
-                  <Label htmlFor="correo">
-                    Correo Electrónico (Opcional)
-                  </Label>
-                  <Input
-                    id="correo"
-                    name="correo"
-                    type="email"
-                    value={formData.correo}
-                    onChange={handleInputChange}
-                    placeholder="correo@ejemplo.com"
-                    className="h-11"
-                  />
-                </div>
+                <form.Field
+                  name="correo"
+                  validators={{
+                    onChange: ({ value }) => {
+                      if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+                        return 'Correo electrónico inválido'
+                      return undefined
+                    },
+                  }}
+                >
+                  {(field) => (
+                    <div className="space-y-2">
+                      <Label htmlFor="correo">
+                        Correo Electrónico (Opcional)
+                      </Label>
+                      <Input
+                        id="correo"
+                        type="email"
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        onBlur={field.handleBlur}
+                        placeholder="correo@ejemplo.com"
+                        className="h-11"
+                      />
+                      {field.state.meta.errors.length > 0 && (
+                        <p className="text-sm text-destructive">
+                          {field.state.meta.errors[0]}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </form.Field>
               </div>
 
               {/* Required Fields Row */}
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Tipo de Comentario */}
-                <div className="space-y-2">
-                  <Label htmlFor="tipoComentario">
-                    Tipo de Comentario <span className="text-destructive">*</span>
-                  </Label>
-                  <Select
-                    value={formData.tipoComentario}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, tipoComentario: value }))}
-                    required
-                  >
-                    <SelectTrigger className="h-11">
-                      <SelectValue placeholder="Seleccione una opción" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="sugerencia">Sugerencia</SelectItem>
-                      <SelectItem value="reporte">Reporte</SelectItem>
-                      <SelectItem value="queja">Queja</SelectItem>
-                      <SelectItem value="felicitacion">Felicitación</SelectItem>
-                      <SelectItem value="consulta">Consulta</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <form.Field
+                  name="tipoComentario"
+                  validators={{
+                    onChange: ({ value }) => {
+                      if (!value) return 'Debe seleccionar un tipo de comentario'
+                      return undefined
+                    },
+                  }}
+                >
+                  {(field) => (
+                    <div className="space-y-2">
+                      <Label htmlFor="tipoComentario">
+                        Tipo de Comentario <span className="text-destructive">*</span>
+                      </Label>
+                      <Select
+                        value={field.state.value}
+                        onValueChange={(value) => field.handleChange(value)}
+                      >
+                        <SelectTrigger className="h-11">
+                          <SelectValue placeholder="Seleccione una opción" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="sugerencia">Sugerencia</SelectItem>
+                          <SelectItem value="reporte">Reporte</SelectItem>
+                          <SelectItem value="queja">Queja</SelectItem>
+                          <SelectItem value="felicitacion">Felicitación</SelectItem>
+                          <SelectItem value="consulta">Consulta</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {field.state.meta.errors.length > 0 && (
+                        <p className="text-sm text-destructive">
+                          {field.state.meta.errors[0]}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </form.Field>
 
                 {/* Proyecto Relacionado */}
-                <div className="space-y-2">
-                  <Label htmlFor="proyectoRelacionado">
-                    Proyecto Relacionado (Opcional)
-                  </Label>
-                  <Select
-                    value={formData.proyectoRelacionado}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, proyectoRelacionado: value }))}
-                  >
-                    <SelectTrigger className="h-11">
-                      <SelectValue placeholder="Ninguno específico" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="">Ninguno específico</SelectItem>
-                      <SelectItem value="proyecto-1">Carretera Nacional Ruta 32</SelectItem>
-                      <SelectItem value="proyecto-2">Hospital Regional de Limón</SelectItem>
-                      <SelectItem value="proyecto-3">Acueducto Metropolitano</SelectItem>
-                      <SelectItem value="proyecto-4">Parque Nacional Corcovado</SelectItem>
-                      <SelectItem value="proyecto-5">Centro Educativo San José</SelectItem>
-                      <SelectItem value="proyecto-6">Puente Río Grande</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <form.Field name="proyectoRelacionado">
+                  {(field) => (
+                    <div className="space-y-2">
+                      <Label htmlFor="proyectoRelacionado">
+                        Proyecto Relacionado (Opcional)
+                      </Label>
+                      <Select
+                        value={field.state.value}
+                        onValueChange={(value) => field.handleChange(value)}
+                      >
+                        <SelectTrigger className="h-11">
+                          <SelectValue placeholder="Ninguno específico" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">Ninguno específico</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                </form.Field>
               </div>
 
               {/* Comentario */}
-              <div className="space-y-2">
-                <Label htmlFor="comentario">
-                  Comentario <span className="text-destructive">*</span>
-                </Label>
-                <Textarea
-                  id="comentario"
-                  name="comentario"
-                  value={formData.comentario}
-                  onChange={handleInputChange}
-                  placeholder="Escriba aquí su opinión, sugerencia o comentario..."
-                  rows={6}
-                  className="resize-none"
-                  required
-                />
-                <p className="text-xs text-muted-foreground">
-                  Mínimo 10 caracteres. Sea específico y constructivo.
-                </p>
-              </div>
+              <form.Field
+                name="comentario"
+                validators={{
+                  onChange: ({ value }) => {
+                    if (!value) return 'El comentario es requerido'
+                    if (value.length < 10)
+                      return 'El comentario debe tener al menos 10 caracteres'
+                    return undefined
+                  },
+                }}
+              >
+                {(field) => (
+                  <div className="space-y-2">
+                    <Label htmlFor="comentario">
+                      Comentario <span className="text-destructive">*</span>
+                    </Label>
+                    <Textarea
+                      id="comentario"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                      placeholder="Escriba aquí su opinión, sugerencia o comentario..."
+                      rows={6}
+                      className="resize-none"
+                    />
+                    {field.state.meta.errors.length > 0 && (
+                      <p className="text-sm text-destructive">
+                        {field.state.meta.errors[0]}
+                      </p>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      Mínimo 10 caracteres. Sea específico y constructivo.
+                    </p>
+                  </div>
+                )}
+              </form.Field>
 
               {/* Privacy Notice */}
               <div className="p-4 bg-muted rounded-lg border border-border">

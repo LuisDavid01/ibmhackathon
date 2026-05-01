@@ -1,34 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
-
-// Import types and mock data
-import type { TechnicalVersion } from "@/components/home/types"
-import {
-  mockProject,
-  mockMilestones,
-  mockBudget,
-  mockActivities,
-  mockDocuments,
-  mockVersions,
-  mockRelatedProjects
-} from "@/components/home/mockData"
 
 // Import components
 import { Navbar } from "@/components/home/Navbar"
 import { Footer } from "@/components/home/Footer"
-import { HeroSection } from "@/components/home/Hero"
-import { Timeline } from "@/components/home/Timeline"
-import { BudgetChart } from "@/components/home/BudgetChart"
-import { ActivityFeed } from "@/components/home/ActivityFeed"
-import {
-  ParticipationCard,
-  LocationCard,
-  DocumentsCard,
-  ResponsibleEntityCard,
-  ProjectCard
-} from "@/components/home/Sidebar"
 
 export const Route = createFileRoute("/")({ component: ProjectDetailPage })
 
@@ -39,11 +15,32 @@ export const Route = createFileRoute("/")({ component: ProjectDetailPage })
 function ProjectDetailPage() {
   const [showOpinionForm, setShowOpinionForm] = useState(false)
 
+  // Empty state - ready for backend integration
+  const project = null
+  const milestones = []
+  const budgetCategories = []
+  const activities = []
+  const documents = []
+  const versions = []
+  const relatedProjects = []
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <HeroSection project={mockProject} />
+      {/* Hero Section - Empty State */}
+      <div className="relative bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              Bienvenido a la Plataforma de Transparencia
+            </h1>
+            <p className="text-lg opacity-90 mb-6">
+              Sistema de seguimiento y gestión de proyectos gubernamentales
+            </p>
+          </div>
+        </div>
+      </div>
       
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
@@ -53,12 +50,30 @@ function ProjectDetailPage() {
             {/* Descripción General */}
             <Card>
               <CardHeader>
-                <CardTitle>Descripción General</CardTitle>
+                <CardTitle>Información del Proyecto</CardTitle>
+                <CardDescription>
+                  Los detalles del proyecto aparecerán aquí cuando se conecte al backend
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {mockProject.description}
-                </p>
+                <div className="text-center py-12">
+                  <svg
+                    className="w-16 h-16 mx-auto text-muted-foreground mb-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
+                  </svg>
+                  <p className="text-muted-foreground">
+                    No hay proyectos disponibles en este momento
+                  </p>
+                </div>
               </CardContent>
             </Card>
 
@@ -69,7 +84,11 @@ function ProjectDetailPage() {
                 <CardDescription>Seguimiento de las etapas principales del proyecto</CardDescription>
               </CardHeader>
               <CardContent>
-                <Timeline milestones={mockMilestones} />
+                <div className="text-center py-8">
+                  <p className="text-sm text-muted-foreground">
+                    Los hitos del proyecto aparecerán aquí
+                  </p>
+                </div>
               </CardContent>
             </Card>
 
@@ -80,7 +99,11 @@ function ProjectDetailPage() {
                 <CardDescription>Distribución y avance del presupuesto por categoría</CardDescription>
               </CardHeader>
               <CardContent>
-                <BudgetChart categories={mockBudget} />
+                <div className="text-center py-8">
+                  <p className="text-sm text-muted-foreground">
+                    La información presupuestaria aparecerá aquí
+                  </p>
+                </div>
               </CardContent>
             </Card>
 
@@ -91,7 +114,11 @@ function ProjectDetailPage() {
                 <CardDescription>Últimas actividades y novedades del proyecto</CardDescription>
               </CardHeader>
               <CardContent>
-                <ActivityFeed activities={mockActivities} />
+                <div className="text-center py-8">
+                  <p className="text-sm text-muted-foreground">
+                    Las actualizaciones del proyecto aparecerán aquí
+                  </p>
+                </div>
               </CardContent>
             </Card>
 
@@ -101,18 +128,10 @@ function ProjectDetailPage() {
                 <CardTitle>Información Técnica y Versiones</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  {mockVersions.map((version: TechnicalVersion) => (
-                    <div key={version.version} className="flex items-start gap-3 pb-3 border-b border-border last:border-0">
-                      <Badge variant="secondary" className="h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-xs font-semibold">
-                        {version.version}
-                      </Badge>
-                      <div className="flex-1">
-                        <div className="text-sm font-medium text-foreground">{version.notes}</div>
-                        <div className="text-xs text-muted-foreground mt-1">{version.date}</div>
-                      </div>
-                    </div>
-                  ))}
+                <div className="text-center py-8">
+                  <p className="text-sm text-muted-foreground">
+                    Las versiones técnicas aparecerán aquí
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -121,27 +140,90 @@ function ProjectDetailPage() {
           {/* Right Column - Sidebar */}
           <div className="space-y-6">
             {/* Participación Ciudadana */}
-            <ParticipationCard onOpenForm={() => setShowOpinionForm(!showOpinionForm)} />
+            <Card>
+              <CardHeader>
+                <CardTitle>Participación Ciudadana</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Comparte tu opinión sobre este proyecto
+                </p>
+                <button
+                  onClick={() => setShowOpinionForm(!showOpinionForm)}
+                  className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                >
+                  Dar mi Opinión
+                </button>
+              </CardContent>
+            </Card>
 
             {/* Ubicación del Proyecto */}
-            <LocationCard project={mockProject} />
+            <Card>
+              <CardHeader>
+                <CardTitle>Ubicación del Proyecto</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8">
+                  <p className="text-sm text-muted-foreground">
+                    La ubicación aparecerá aquí
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Documentos Relacionados */}
-            <DocumentsCard documents={mockDocuments} />
+            <Card>
+              <CardHeader>
+                <CardTitle>Documentos Relacionados</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8">
+                  <p className="text-sm text-muted-foreground">
+                    Los documentos aparecerán aquí
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Entidad Responsable */}
-            <ResponsibleEntityCard project={mockProject} />
+            <Card>
+              <CardHeader>
+                <CardTitle>Entidad Responsable</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8">
+                  <p className="text-sm text-muted-foreground">
+                    La información de la entidad aparecerá aquí
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
         {/* Proyectos Relacionados */}
         <div className="mt-12">
           <h2 className="text-2xl font-bold text-foreground mb-6">Proyectos Relacionados</h2>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {mockRelatedProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
+          <Card>
+            <CardContent className="p-12 text-center">
+              <svg
+                className="w-16 h-16 mx-auto text-muted-foreground mb-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                />
+              </svg>
+              <p className="text-muted-foreground">
+                Los proyectos relacionados aparecerán aquí
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
