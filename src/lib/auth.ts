@@ -10,7 +10,7 @@ export const auth = betterAuth({
 		enabled: true,
 	},
     database: drizzleAdapter(db, {
-        provider: "mysql", 
+        provider: "pg", 
 	}),
 	plugins:[tanstackStartCookies(), admin()]
 

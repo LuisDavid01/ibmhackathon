@@ -1,15 +1,11 @@
-import { type Config } from "drizzle-kit";
+import 'dotenv/config';
+import { defineConfig } from 'drizzle-kit';
 
-export default {
-  schema: "./src/server/db/schema.ts",
-  dialect: "singlestore",
-  tablesFilter: ["ibmhackathon_*"],
+export default defineConfig({
+  out: './drizzle',
+  schema: './src/server/db/schema.ts',
+  dialect: 'postgresql',
   dbCredentials: {
-    host: process.env.SINGLESTORE_HOST!,
-    port: parseInt(process.env.SINGLESTORE_PORT!),
-    user: process.env.SINGLESTORE_USER,
-    password: process.env.SINGLESTORE_PASS,
-    database: process.env.SINGLESTORE_DB_NAME!,
-    ssl: {},
+    url: process.env.DATABASE_URL!,
   },
-} satisfies Config;
+});
