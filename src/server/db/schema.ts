@@ -21,6 +21,57 @@ export const comments_table = pgTable(
   ],
 );
 
+export const proyects = pgTable(
+  "proyectos",
+  {
+  id: bigint("id", { mode: "number"})
+      .primaryKey()
+      .generatedAlwaysAsIdentity(),
+      // id del usuario
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  company: text("company").notNull(),
+  location: text("location").notNull(),
+  municipalidad: text("municipality").notNull(),
+  budget: bigint("budget", { mode: "number"}).notNull(),
+  startedAt: timestamp("started_at").notNull().defaultNow(),
+
+  },
+    (t) => {
+    return [
+      index("name_index").on(t.name),
+      index("company_index").on(t.company),
+      index("location_index").on(t.location),
+      index("municipalidad_index").on(t.municipalidad),
+    ];
+  },
+)
+
+
+export const proyect_changes = pgTable(
+  "proyectos_changes",
+  {
+  id: bigint("id", { mode: "number" })
+      .primaryKey()
+      .generatedAlwaysAsIdentity(),
+  proyectId: bigint("proyect_id", { mode: "number"}).notNull()
+  .references(() => proyects.id, { onDelete: "cascade" }),
+  changeTitle: text("change_title").notNull(),
+
+  userId: text("user_id").notNull()
+  .references(() => user.id, { onDelete: "cascade" }),
+  details: text("details").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  budgetSpent: bigint("budget_spent", { mode: "number"}).notNull(),
+
+  },
+    (t) => {
+    return [
+      index("proyecto_index").on(t.proyectId),
+      index("user_index").on(t.userId),
+    ];
+  },
+)
 
 
 // better auth tables
@@ -120,81 +171,25 @@ export const accountRelations = relations(account, ({ one }) => ({
   }),
 }));
 
+export const commentsRelations = relations(comments_table, ({ one }) => ({
+  user: one(user, {
+    fields: [comments_table.ownerId],
+    references: [user.id],
+  }),
+}));
 
-// ============================================
-// Application Tables
-// ============================================
-/*
-export const comments_table = createTable(
-  "comments",
-  {
-    id: bigint("id", { mode: "number", unsigned: true })
-      .primaryKey()
-      .autoincrement(),
-      // id del usuario
-    ownerId: text("owner_id").notNull(),
-    title: text("name").notNull(),
-    content: text("content").notNull(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-  },
-  (t) => {
-    return [
-      index("title_index").on(t.title),
-      index("owner_id_index").on(t.ownerId),
-    ];
-  },
-);
-
-export type DB_CommentType = typeof comments_table.$inferSelect;
+export const proyectChangesRelations = relations(proyect_changes, ({ one }) => ({
+  user: one(user, {
+    fields: [proyect_changes.userId],
+    references: [user.id],
+  }),
+  proyect: one(proyects, {
+    fields: [proyect_changes.proyectId],
+    references: [proyects.id],
+  }),
+}))
 
 
-export const proyects_tables = createTable(
-  "proyectos",
-  {
-  id: bigint("id", { mode: "number", unsigned: true })
-      .primaryKey()
-      .autoincrement(),
-      // id del usuario
-  name: text("name").notNull(),
-  description: text("description").notNull(),
-  company: text("company").notNull(),
-  location: text("location").notNull(),
-  municipalidad: text("municipality").notNull(),
-  budget: bigint("budget", { mode: "number", unsigned: true }).notNull(),
-  startedAt: timestamp("started_at").notNull().defaultNow(),
 
-  },
-    (t) => {
-    return [
-      index("name_index").on(t.name),
-      index("company_index").on(t.company),
-      index("location_index").on(t.location),
-      index("municipalidad_index").on(t.municipalidad),
-    ];
-  },
-)
 
-export const proyect_changes_tables = createTable(
-  "proyectos_changes",
 
-  {
-  id: bigint("id", { mode: "number", unsigned: true })
-      .primaryKey()
-      .autoincrement(),
-  proyectId: bigint("proyect_id", { mode: "number", unsigned: true }).notNull(),
-  changeTitle: text("change_title").notNull(),
-
-  userId: bigint("user_id", { mode: "number", unsigned: true }).notNull(),
-  details: text("details").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  budgetSpent: bigint("budget_spent", { mode: "number", unsigned: true }).notNull(),
-
-  },
-    (t) => {
-    return [
-      index("proyecto_index").on(t.proyectId),
-      index("user_index").on(t.userId),
-    ];
-  },
-)
-*/
