@@ -643,7 +643,7 @@ function ProjectDetailPage() {
             </div>
           </div>
           <div className="mt-8 border-t border-border pt-6 text-center text-sm text-muted-foreground">
-            © 2024 Gobierno de Costa Rica. Todos los derechos reservados.
+            © 2026 Gobierno de Costa Rica. Todos los derechos reservados.
           </div>
         </div>
       </footer>
