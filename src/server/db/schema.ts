@@ -2,12 +2,12 @@ import {
   int,
   text,
   index,
-  singlestoreTableCreator,
+  mysqlTableCreator,
   bigint,
   timestamp,
   boolean,
   varchar,
-} from "drizzle-orm/singlestore-core";
+} from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
 
 /**
@@ -16,7 +16,7 @@ import { relations } from "drizzle-orm";
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = singlestoreTableCreator(
+export const createTable = mysqlTableCreator(
   (name) => `ibmhackathon_${name}`,
 );
 
@@ -45,6 +45,33 @@ export const comments_table = createTable(
 );
 
 export type DB_CommentType = typeof comments_table.$inferSelect;
+
+
+export const proyects_tables = createTable(
+  "proyectos",
+  {
+  id: bigint("id", { mode: "number", unsigned: true })
+      .primaryKey()
+      .autoincrement(),
+      // id del usuario
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  company: text("company").notNull(),
+  location: text("location").notNull(),
+  municipalidad: text("municipality").notNull(),
+  budget: bigint("budget", { mode: "number", unsigned: true }).notNull(),
+  startedAt: timestamp("started_at").notNull().defaultNow(),
+
+  },
+    (t) => {
+    return [
+      index("name_index").on(t.name),
+      index("company_index").on(t.company),
+      index("location_index").on(t.location),
+      index("municipalidad_index").on(t.municipalidad),
+    ];
+  },
+)
 
 // ============================================
 // Better Auth Tables (SingleStore compatible)
