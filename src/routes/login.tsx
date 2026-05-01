@@ -7,7 +7,8 @@ import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { authClient } from '@/lib/auth-client'
 import { toast } from 'sonner'
-import { Eye, EyeOff, Mail, Lock, Shield, FileText, Database } from 'lucide-react'
+import { Database, Eye, EyeOff, FileText, Lock, Mail, Shield } from 'lucide-react'
+
 
 export const Route = createFileRoute('/login')({
   component: RouteComponent,
