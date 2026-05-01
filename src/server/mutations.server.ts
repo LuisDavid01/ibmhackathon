@@ -6,7 +6,7 @@ import {
 
 export const MUTATIONS = {
 
-    async function (data: UserInsert): Promise<ServerFNResponse>{
+    async createUser (data: UserInsert): Promise<ServerFNResponse>{
         const req = getRequest()
 
         const newUser = await auth.api.createUser({
@@ -20,10 +20,9 @@ export const MUTATIONS = {
         if (!newUser) {
             return {
                 success: false,
-                message: "Error creating user",
+                message: "Error creating user, please try again",
             }
         }
-
         return {
             success: true,
             message: "User created successfully",

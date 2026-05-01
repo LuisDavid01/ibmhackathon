@@ -9,6 +9,7 @@ import type { User } from "better-auth"
 export const QUERIES = {
     getUsuarios:
         async function (limit: number, offset: number):Promise<DataPagination<User>> {
+            try {
             const req = getRequest()
             const users = await auth.api.listUsers(
                 {
@@ -26,5 +27,8 @@ export const QUERIES = {
                 offset: (offset / limit) + 1,
                 totalPages: Math.ceil(users.total / limit),
             }
+        } catch(error){
+            throw error
+        }
         }
 }
