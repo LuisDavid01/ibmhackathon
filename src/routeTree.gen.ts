@@ -9,14 +9,38 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UsuariosRouteImport } from './routes/usuarios'
+import { Route as ProyectosRouteImport } from './routes/proyectos'
+import { Route as ParticiparRouteImport } from './routes/participar'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AdministrarUsuariosRouteImport } from './routes/administrarUsuarios'
 import { Route as AcercaRouteImport } from './routes/acerca'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const UsuariosRoute = UsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProyectosRoute = ProyectosRouteImport.update({
+  id: '/proyectos',
+  path: '/proyectos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParticiparRoute = ParticiparRouteImport.update({
+  id: '/participar',
+  path: '/participar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdministrarUsuariosRoute = AdministrarUsuariosRouteImport.update({
+  id: '/administrarUsuarios',
+  path: '/administrarUsuarios',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AcercaRoute = AcercaRouteImport.update({
@@ -38,44 +62,113 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/acerca': typeof AcercaRoute
+  '/administrarUsuarios': typeof AdministrarUsuariosRoute
   '/login': typeof LoginRoute
+  '/participar': typeof ParticiparRoute
+  '/proyectos': typeof ProyectosRoute
+  '/usuarios': typeof UsuariosRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acerca': typeof AcercaRoute
+  '/administrarUsuarios': typeof AdministrarUsuariosRoute
   '/login': typeof LoginRoute
+  '/participar': typeof ParticiparRoute
+  '/proyectos': typeof ProyectosRoute
+  '/usuarios': typeof UsuariosRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/acerca': typeof AcercaRoute
+  '/administrarUsuarios': typeof AdministrarUsuariosRoute
   '/login': typeof LoginRoute
+  '/participar': typeof ParticiparRoute
+  '/proyectos': typeof ProyectosRoute
+  '/usuarios': typeof UsuariosRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/acerca' | '/login' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/acerca'
+    | '/administrarUsuarios'
+    | '/login'
+    | '/participar'
+    | '/proyectos'
+    | '/usuarios'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/acerca' | '/login' | '/api/auth/$'
-  id: '__root__' | '/' | '/acerca' | '/login' | '/api/auth/$'
+  to:
+    | '/'
+    | '/acerca'
+    | '/administrarUsuarios'
+    | '/login'
+    | '/participar'
+    | '/proyectos'
+    | '/usuarios'
+    | '/api/auth/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/acerca'
+    | '/administrarUsuarios'
+    | '/login'
+    | '/participar'
+    | '/proyectos'
+    | '/usuarios'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AcercaRoute: typeof AcercaRoute
+  AdministrarUsuariosRoute: typeof AdministrarUsuariosRoute
   LoginRoute: typeof LoginRoute
+  ParticiparRoute: typeof ParticiparRoute
+  ProyectosRoute: typeof ProyectosRoute
+  UsuariosRoute: typeof UsuariosRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/usuarios': {
+      id: '/usuarios'
+      path: '/usuarios'
+      fullPath: '/usuarios'
+      preLoaderRoute: typeof UsuariosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/proyectos': {
+      id: '/proyectos'
+      path: '/proyectos'
+      fullPath: '/proyectos'
+      preLoaderRoute: typeof ProyectosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/participar': {
+      id: '/participar'
+      path: '/participar'
+      fullPath: '/participar'
+      preLoaderRoute: typeof ParticiparRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/administrarUsuarios': {
+      id: '/administrarUsuarios'
+      path: '/administrarUsuarios'
+      fullPath: '/administrarUsuarios'
+      preLoaderRoute: typeof AdministrarUsuariosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/acerca': {
@@ -105,7 +198,11 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AcercaRoute: AcercaRoute,
+  AdministrarUsuariosRoute: AdministrarUsuariosRoute,
   LoginRoute: LoginRoute,
+  ParticiparRoute: ParticiparRoute,
+  ProyectosRoute: ProyectosRoute,
+  UsuariosRoute: UsuariosRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
