@@ -23,16 +23,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { getUsuarios, crearUsuarios } from '@/functions/user.functions'
+import { getUsuarios, crearUsuarios, actualizarUsuario, eliminarUsuario } from '@/functions/user.functions'
 import type { UserInsert } from '@/types'
-import { AlertCircle, Loader2 } from 'lucide-react'
+import { AlertCircle, Loader2, Trash2 } from 'lucide-react'
 
 export const Route = createFileRoute('/usuarios')({
   component: RouteComponent,
 })
 
 type UserRole = 'admin' | 'user'
-type UserStatus = 'active' | 'inactive'
 
 interface UserFormData {
   name: string
@@ -59,14 +58,16 @@ function RouteComponent() {
   const queryClient = useQueryClient()
   const [selectedUser, setSelectedUser] = useState<ExtendedUser | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [userToDelete, setUserToDelete] = useState<ExtendedUser | null>(null)
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create')
   const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState<'all' | UserStatus>('all')
 
   // Fetch users with TanStack Query
   const {
     data: usersData,
     isLoading,
+    isError,
     error,
   } = useQuery({
     queryKey: ['users', { limit: 100, offset: 0 }],
@@ -79,10 +80,40 @@ function RouteComponent() {
   // Create user mutation
   const createUserMutation = useMutation({
     mutationFn: (userData: UserInsert) => crearUsuarios({ data: userData }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] })
-      setIsModalOpen(false)
-      form.reset()
+    onSuccess: (response) => {
+      if (response.success) {
+        queryClient.invalidateQueries({ queryKey: ['users'] })
+        setIsModalOpen(false)
+        form.reset()
+      }
+    },
+  })
+
+  // Update user mutation
+  const updateUserMutation = useMutation({
+    mutationFn: (data: { id: string; data: Partial<UserInsert> }) =>
+      actualizarUsuario({ data }),
+    onSuccess: (response) => {
+      if (response.success) {
+        queryClient.invalidateQueries({ queryKey: ['users'] })
+        setIsModalOpen(false)
+        form.reset()
+      }
+    },
+  })
+
+  // Delete user mutation
+  const deleteUserMutation = useMutation({
+    mutationFn: (id: string) => eliminarUsuario({ data: { id } }),
+    onSuccess: (response) => {
+      if (response.success) {
+        queryClient.invalidateQueries({ queryKey: ['users'] })
+        setIsDeleteDialogOpen(false)
+        setUserToDelete(null)
+        if (selectedUser?.id === userToDelete?.id) {
+          setSelectedUser(null)
+        }
+      }
     },
   })
 
@@ -97,8 +128,13 @@ function RouteComponent() {
     onSubmit: async ({ value }: { value: UserFormData }) => {
       if (modalMode === 'create') {
         createUserMutation.mutate(value)
+      } else if (modalMode === 'edit' && selectedUser) {
+        const { password, ...updateData } = value
+        updateUserMutation.mutate({
+          id: selectedUser.id,
+          data: updateData,
+        })
       }
-      // Edit functionality would go here when backend supports it
     },
   })
 
@@ -107,7 +143,6 @@ function RouteComponent() {
     const matchesSearch =
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase())
-    // Status filter would need backend support for user status
     return matchesSearch
   })
 
@@ -125,6 +160,17 @@ function RouteComponent() {
     form.setFieldValue('email', user.email)
     form.setFieldValue('role', (user.role as UserRole) || 'user')
     setIsModalOpen(true)
+  }
+
+  const handleDeleteClick = (user: ExtendedUser) => {
+    setUserToDelete(user)
+    setIsDeleteDialogOpen(true)
+  }
+
+  const handleConfirmDelete = () => {
+    if (userToDelete) {
+      deleteUserMutation.mutate(userToDelete.id)
+    }
   }
 
   const getInitials = (name: string) => {
@@ -272,7 +318,7 @@ function RouteComponent() {
             </Card>
 
             {/* ERROR STATE */}
-            {error && (
+            {isError && (
               <Alert variant="destructive" className="mb-6">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
@@ -289,7 +335,7 @@ function RouteComponent() {
             )}
 
             {/* USERS LIST */}
-            {!isLoading && !error && (
+            {!isLoading && !isError && (
               <div className="grid gap-4">
                 {filteredUsers.map((user) => (
                   <Card
@@ -369,6 +415,16 @@ function RouteComponent() {
                             </svg>
                             Editar
                           </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDeleteClick(user)
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
                         </div>
                       </div>
                     </CardContent>
@@ -404,7 +460,7 @@ function RouteComponent() {
         </main>
       </div>
 
-      {/* MODAL */}
+      {/* CREATE/EDIT MODAL */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -427,7 +483,15 @@ function RouteComponent() {
             className="space-y-4"
           >
             {/* Name Field */}
-            <form.Field name="name">
+            <form.Field
+              name="name"
+              validators={{
+                onChange: ({ value }) => {
+                  if (!value) return 'El nombre es requerido'
+                  return undefined
+                },
+              }}
+            >
               {(field) => (
                 <div className="space-y-2">
                   <Label htmlFor="name">
@@ -544,11 +608,13 @@ function RouteComponent() {
             </form.Field>
 
             {/* Error Message */}
-            {createUserMutation.isError && (
+            {(createUserMutation.isError || updateUserMutation.isError) && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Error al crear usuario. Por favor, intente nuevamente.
+                  {modalMode === 'create'
+                    ? createUserMutation.error?.message || 'Error al crear usuario'
+                    : updateUserMutation.error?.message || 'Error al actualizar usuario'}
                 </AlertDescription>
               </Alert>
             )}
@@ -558,12 +624,15 @@ function RouteComponent() {
                 type="button"
                 variant="outline"
                 onClick={() => setIsModalOpen(false)}
-                disabled={createUserMutation.isPending}
+                disabled={createUserMutation.isPending || updateUserMutation.isPending}
               >
                 Cancelar
               </Button>
-              <Button type="submit" disabled={createUserMutation.isPending}>
-                {createUserMutation.isPending ? (
+              <Button
+                type="submit"
+                disabled={createUserMutation.isPending || updateUserMutation.isPending}
+              >
+                {(createUserMutation.isPending || updateUserMutation.isPending) ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Guardando...
@@ -576,6 +645,61 @@ function RouteComponent() {
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* DELETE CONFIRMATION DIALOG */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Confirmar Eliminación</DialogTitle>
+            <DialogDescription>
+              ¿Está seguro que desea eliminar al usuario{' '}
+              <span className="font-semibold">{userToDelete?.name}</span>?
+              Esta acción no se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+
+          {deleteUserMutation.isError && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                {deleteUserMutation.error?.message || 'Error al eliminar usuario'}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setIsDeleteDialogOpen(false)
+                setUserToDelete(null)
+              }}
+              disabled={deleteUserMutation.isPending}
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleConfirmDelete}
+              disabled={deleteUserMutation.isPending}
+            >
+              {deleteUserMutation.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Eliminando...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Eliminar Usuario
+                </>
+              )}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
