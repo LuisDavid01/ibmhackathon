@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "singlestore",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "1",
+      "when": 1777650122969,
+      "tag": "0000_worthless_dreadnoughts",
+      "breakpoints": true
+    }
+  ]
+}
