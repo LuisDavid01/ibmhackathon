@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
 
 // Import types and mock data
@@ -39,7 +40,7 @@ function ProjectDetailPage() {
   const [showOpinionForm, setShowOpinionForm] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Navbar />
       
       <HeroSection project={mockProject} />
@@ -102,12 +103,12 @@ function ProjectDetailPage() {
               <CardContent>
                 <div className="space-y-3">
                   {mockVersions.map((version: TechnicalVersion) => (
-                    <div key={version.version} className="flex items-start gap-3 pb-3 border-b last:border-0">
-                      <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[#2E7D32]/10 text-xs font-semibold text-[#2E7D32]">
+                    <div key={version.version} className="flex items-start gap-3 pb-3 border-b border-border last:border-0">
+                      <Badge variant="secondary" className="h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-xs font-semibold">
                         {version.version}
-                      </div>
+                      </Badge>
                       <div className="flex-1">
-                        <div className="text-sm font-medium">{version.notes}</div>
+                        <div className="text-sm font-medium text-foreground">{version.notes}</div>
                         <div className="text-xs text-muted-foreground mt-1">{version.date}</div>
                       </div>
                     </div>
@@ -135,7 +136,7 @@ function ProjectDetailPage() {
 
         {/* Proyectos Relacionados */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">Proyectos Relacionados</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-6">Proyectos Relacionados</h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {mockRelatedProjects.map((project) => (
               <ProjectCard key={project.id} project={project} />

@@ -3,11 +3,21 @@ import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { 
-  Search, 
-  Filter, 
-  Eye, 
-  MessageSquare, 
+import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import {
+  Search,
+  Filter,
+  Eye,
+  MessageSquare,
   MapPin,
   Calendar,
   DollarSign,
@@ -200,42 +210,35 @@ function RouteComponent() {
     })
   }
 
-  const getStatusColor = (status: string) => {
+  const getStatusVariant = (status: string): "default" | "secondary" | "outline" | "destructive" => {
     switch (status) {
       case 'Completado':
-        return 'bg-green-100 text-green-800 border-green-200'
+        return 'default'
       case 'En Progreso':
-        return 'bg-blue-100 text-blue-800 border-blue-200'
+        return 'secondary'
       case 'Planificación':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+        return 'outline'
       case 'Pausado':
-        return 'bg-red-100 text-red-800 border-red-200'
+        return 'destructive'
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200'
+        return 'outline'
     }
   }
 
-  const getProgressColor = (progress: number) => {
-    if (progress >= 80) return 'bg-green-500'
-    if (progress >= 50) return 'bg-blue-500'
-    if (progress >= 25) return 'bg-yellow-500'
-    return 'bg-red-500'
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F5F5F5] via-[#E8F5E9] to-[#F5F5F5] py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted to-background py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-[#2E7D32] rounded-full shadow-lg">
-              <Building2 className="w-6 h-6 text-white" />
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-primary rounded-full shadow-lg">
+              <Building2 className="w-6 h-6 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">
+              <h1 className="text-3xl font-bold text-foreground">
                 Catálogo de Proyectos
               </h1>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 {filteredProjects.length} proyectos encontrados
               </p>
             </div>
@@ -243,18 +246,18 @@ function RouteComponent() {
         </div>
 
         {/* Search and Filters */}
-        <Card className="mb-6 shadow-lg border-0">
+        <Card className="mb-6 shadow-lg">
           <CardContent className="p-6">
             <div className="space-y-4">
               {/* Search Bar */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
                   type="text"
                   placeholder="Buscar proyectos por nombre, descripción o ubicación..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-12 border-gray-300 focus:border-[#2E7D32] focus:ring-[#2E7D32]"
+                  className="pl-10 h-12"
                 />
               </div>
 
@@ -262,14 +265,14 @@ function RouteComponent() {
               <div className="grid md:grid-cols-4 gap-4">
                 {/* Status Filter */}
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-700 flex items-center gap-1">
+                  <label className="text-xs font-medium text-foreground flex items-center gap-1">
                     <Filter className="w-3 h-3" />
                     Estado
                   </label>
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="w-full h-10 px-3 border border-gray-300 rounded-lg focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 transition-all bg-white text-sm"
+                    className="w-full h-10 px-3 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-sm"
                   >
                     <option value="all">Todos los estados</option>
                     <option value="En Progreso">En Progreso</option>
@@ -281,14 +284,14 @@ function RouteComponent() {
 
                 {/* Location Filter */}
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-700 flex items-center gap-1">
+                  <label className="text-xs font-medium text-foreground flex items-center gap-1">
                     <MapPin className="w-3 h-3" />
                     Ubicación
                   </label>
                   <select
                     value={locationFilter}
                     onChange={(e) => setLocationFilter(e.target.value)}
-                    className="w-full h-10 px-3 border border-gray-300 rounded-lg focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 transition-all bg-white text-sm"
+                    className="w-full h-10 px-3 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-sm"
                   >
                     <option value="all">Todas las ubicaciones</option>
                     <option value="san josé">San José</option>
@@ -301,14 +304,14 @@ function RouteComponent() {
 
                 {/* Budget Filter */}
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-700 flex items-center gap-1">
+                  <label className="text-xs font-medium text-foreground flex items-center gap-1">
                     <DollarSign className="w-3 h-3" />
                     Presupuesto
                   </label>
                   <select
                     value={budgetFilter}
                     onChange={(e) => setBudgetFilter(e.target.value)}
-                    className="w-full h-10 px-3 border border-gray-300 rounded-lg focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 transition-all bg-white text-sm"
+                    className="w-full h-10 px-3 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-sm"
                   >
                     <option value="all">Todos los rangos</option>
                     <option value="low">Menos de ₡20M</option>
@@ -319,7 +322,7 @@ function RouteComponent() {
 
                 {/* View Toggle */}
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-700">
+                  <label className="text-xs font-medium text-foreground">
                     Vista
                   </label>
                   <div className="flex gap-2">
@@ -327,7 +330,6 @@ function RouteComponent() {
                       variant={viewMode === 'table' ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setViewMode('table')}
-                      className={viewMode === 'table' ? 'bg-[#2E7D32] hover:bg-[#1B5E20]' : ''}
                     >
                       <List className="w-4 h-4" />
                     </Button>
@@ -335,7 +337,6 @@ function RouteComponent() {
                       variant={viewMode === 'cards' ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setViewMode('cards')}
-                      className={viewMode === 'cards' ? 'bg-[#2E7D32] hover:bg-[#1B5E20]' : ''}
                     >
                       <Grid3x3 className="w-4 h-4" />
                     </Button>
@@ -349,119 +350,107 @@ function RouteComponent() {
         {/* Projects Display */}
         {viewMode === 'table' ? (
           /* Table View */
-          <Card className="shadow-lg border-0 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-[#2E7D32] text-white">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Proyecto</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Ubicación</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Fechas</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Presupuesto</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Progreso</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Estado</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {paginatedProjects.map((project, index) => (
-                    <tr 
-                      key={project.id}
-                      className={`hover:bg-gray-50 transition-colors ${
-                        index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'
-                      }`}
-                    >
-                      <td className="px-6 py-4">
-                        <div className="flex items-start gap-3">
-                          <div className="w-16 h-16 bg-gray-200 rounded-lg flex-shrink-0 flex items-center justify-center">
-                            <Building2 className="w-8 h-8 text-gray-400" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="font-semibold text-gray-800 mb-1">
-                              {project.name}
-                            </p>
-                            <p className="text-sm text-gray-600 line-clamp-2">
-                              {project.description}
-                            </p>
-                          </div>
+          <Card className="shadow-lg overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-primary hover:bg-primary">
+                  <TableHead className="text-primary-foreground">Proyecto</TableHead>
+                  <TableHead className="text-primary-foreground">Ubicación</TableHead>
+                  <TableHead className="text-primary-foreground">Fechas</TableHead>
+                  <TableHead className="text-primary-foreground">Presupuesto</TableHead>
+                  <TableHead className="text-primary-foreground">Progreso</TableHead>
+                  <TableHead className="text-primary-foreground">Estado</TableHead>
+                  <TableHead className="text-center text-primary-foreground">Acciones</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedProjects.map((project) => (
+                  <TableRow key={project.id}>
+                    <TableCell>
+                      <div className="flex items-start gap-3">
+                        <div className="w-16 h-16 bg-muted rounded-lg flex-shrink-0 flex items-center justify-center">
+                          <Building2 className="w-8 h-8 text-muted-foreground" />
                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-sm text-gray-700">
-                          <MapPin className="w-4 h-4 text-gray-400" />
-                          {project.location}
+                        <div className="min-w-0">
+                          <p className="font-semibold text-foreground mb-1">
+                            {project.name}
+                          </p>
+                          <p className="text-sm text-muted-foreground line-clamp-2">
+                            {project.description}
+                          </p>
                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="space-y-1 text-sm">
-                          <div className="flex items-center gap-2 text-gray-600">
-                            <Calendar className="w-3 h-3" />
-                            {formatDate(project.startDate)}
-                          </div>
-                          <div className="flex items-center gap-2 text-gray-600">
-                            <Calendar className="w-3 h-3" />
-                            {formatDate(project.endDate)}
-                          </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2 text-sm">
+                        <MapPin className="w-4 h-4 text-muted-foreground" />
+                        {project.location}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1 text-sm">
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Calendar className="w-3 h-3" />
+                          {formatDate(project.startDate)}
                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-sm font-semibold text-gray-800">
-                          <DollarSign className="w-4 h-4 text-[#2E7D32]" />
-                          {formatCurrency(project.budget)}
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Calendar className="w-3 h-3" />
+                          {formatDate(project.endDate)}
                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="font-medium text-gray-700">{project.progress}%</span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                            <div
-                              className={`h-full ${getProgressColor(project.progress)} transition-all duration-300`}
-                              style={{ width: `${project.progress}%` }}
-                            />
-                          </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2 text-sm font-semibold">
+                        <DollarSign className="w-4 h-4 text-primary" />
+                        {formatCurrency(project.budget)}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="font-medium">{project.progress}%</span>
                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(project.status)}`}>
-                          {project.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center justify-center gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-8"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-8"
-                          >
-                            <MessageSquare className="w-4 h-4" />
-                            <span className="ml-1 text-xs">{project.comments}</span>
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                        <Progress value={project.progress} className="h-2" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={getStatusVariant(project.status)}>
+                        {project.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center justify-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8"
+                        >
+                          <MessageSquare className="w-4 h-4" />
+                          <span className="ml-1 text-xs">{project.comments}</span>
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </Card>
         ) : (
           /* Cards View */
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {paginatedProjects.map((project) => (
-              <Card key={project.id} className="shadow-lg border-0 hover:shadow-xl transition-shadow overflow-hidden">
+              <Card key={project.id} className="shadow-lg hover:shadow-xl transition-shadow overflow-hidden">
                 <CardContent className="p-0">
                   {/* Image */}
-                  <div className="h-48 bg-gradient-to-br from-[#2E7D32] to-[#1B5E20] flex items-center justify-center">
-                    <Building2 className="w-16 h-16 text-white/50" />
+                  <div className="h-48 bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
+                    <Building2 className="w-16 h-16 text-primary-foreground/50" />
                   </div>
 
                   {/* Content */}
@@ -469,26 +458,26 @@ function RouteComponent() {
                     {/* Header */}
                     <div>
                       <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-bold text-gray-800 text-lg line-clamp-2">
+                        <h3 className="font-bold text-foreground text-lg line-clamp-2">
                           {project.name}
                         </h3>
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(project.status)} flex-shrink-0 ml-2`}>
+                        <Badge variant={getStatusVariant(project.status)} className="flex-shrink-0 ml-2">
                           {project.status}
-                        </span>
+                        </Badge>
                       </div>
-                      <p className="text-sm text-gray-600 line-clamp-2">
+                      <p className="text-sm text-muted-foreground line-clamp-2">
                         {project.description}
                       </p>
                     </div>
 
                     {/* Details */}
                     <div className="space-y-2 text-sm">
-                      <div className="flex items-center gap-2 text-gray-700">
-                        <MapPin className="w-4 h-4 text-gray-400" />
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-muted-foreground" />
                         {project.location}
                       </div>
-                      <div className="flex items-center gap-2 text-gray-700">
-                        <DollarSign className="w-4 h-4 text-[#2E7D32]" />
+                      <div className="flex items-center gap-2">
+                        <DollarSign className="w-4 h-4 text-primary" />
                         <span className="font-semibold">{formatCurrency(project.budget)}</span>
                       </div>
                     </div>
@@ -496,22 +485,17 @@ function RouteComponent() {
                     {/* Progress */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Progreso</span>
-                        <span className="font-semibold text-gray-800">{project.progress}%</span>
+                        <span className="text-muted-foreground">Progreso</span>
+                        <span className="font-semibold">{project.progress}%</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                        <div
-                          className={`h-full ${getProgressColor(project.progress)} transition-all duration-300`}
-                          style={{ width: `${project.progress}%` }}
-                        />
-                      </div>
+                      <Progress value={project.progress} className="h-2" />
                     </div>
 
                     {/* Actions */}
                     <div className="flex gap-2 pt-2">
                       <Button
                         size="sm"
-                        className="flex-1 bg-[#2E7D32] hover:bg-[#1B5E20]"
+                        className="flex-1"
                       >
                         <Eye className="w-4 h-4 mr-1" />
                         Ver Detalle
@@ -551,7 +535,6 @@ function RouteComponent() {
                   variant={currentPage === page ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setCurrentPage(page)}
-                  className={currentPage === page ? 'bg-[#2E7D32] hover:bg-[#1B5E20]' : ''}
                 >
                   {page}
                 </Button>
@@ -571,15 +554,15 @@ function RouteComponent() {
 
         {/* Empty State */}
         {filteredProjects.length === 0 && (
-          <Card className="shadow-lg border-0">
+          <Card className="shadow-lg">
             <CardContent className="p-12 text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
-                <Search className="w-8 h-8 text-gray-400" />
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-muted rounded-full mb-4">
+                <Search className="w-8 h-8 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+              <h3 className="text-xl font-semibold text-foreground mb-2">
                 No se encontraron proyectos
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-muted-foreground mb-4">
                 Intenta ajustar los filtros o el término de búsqueda
               </p>
               <Button
@@ -589,7 +572,6 @@ function RouteComponent() {
                   setLocationFilter('all')
                   setBudgetFilter('all')
                 }}
-                className="bg-[#2E7D32] hover:bg-[#1B5E20]"
               >
                 Limpiar Filtros
               </Button>

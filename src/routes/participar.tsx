@@ -4,11 +4,14 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { toast } from 'sonner'
-import { 
-  MessageSquare, 
-  Send, 
-  CheckCircle2, 
+import {
+  MessageSquare,
+  Send,
+  CheckCircle2,
   AlertCircle,
   Users,
   FileText,
@@ -76,55 +79,55 @@ function RouteComponent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F5F5F5] via-[#E8F5E9] to-[#F5F5F5] py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted to-background py-12 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#2E7D32] rounded-full mb-4 shadow-lg">
-            <Users className="w-8 h-8 text-white" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-full mb-4 shadow-lg">
+            <Users className="w-8 h-8 text-primary-foreground" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-3">
+          <h1 className="text-4xl font-bold text-foreground mb-3">
             Participación Ciudadana
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Su opinión es importante para nosotros. Comparta sus sugerencias, 
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Su opinión es importante para nosotros. Comparta sus sugerencias,
             reportes o comentarios de forma anónima y segura.
           </p>
         </div>
 
         {/* Info Cards */}
         <div className="grid md:grid-cols-3 gap-4 mb-8">
-          <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+          <Card className="shadow-md hover:shadow-lg transition-shadow">
             <CardContent className="p-6 text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-[#2E7D32]/10 rounded-full mb-3">
-                <Shield className="w-6 h-6 text-[#2E7D32]" />
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
+                <Shield className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="font-semibold text-gray-800 mb-2">Anónimo</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="font-semibold text-foreground mb-2">Anónimo</h3>
+              <p className="text-sm text-muted-foreground">
                 Su identidad está protegida
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+          <Card className="shadow-md hover:shadow-lg transition-shadow">
             <CardContent className="p-6 text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-[#2E7D32]/10 rounded-full mb-3">
-                <MessageSquare className="w-6 h-6 text-[#2E7D32]" />
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
+                <MessageSquare className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="font-semibold text-gray-800 mb-2">Transparente</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="font-semibold text-foreground mb-2">Transparente</h3>
+              <p className="text-sm text-muted-foreground">
                 Todas las opiniones son revisadas
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+          <Card className="shadow-md hover:shadow-lg transition-shadow">
             <CardContent className="p-6 text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-[#2E7D32]/10 rounded-full mb-3">
-                <FileText className="w-6 h-6 text-[#2E7D32]" />
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
+                <FileText className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="font-semibold text-gray-800 mb-2">Efectivo</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="font-semibold text-foreground mb-2">Efectivo</h3>
+              <p className="text-sm text-muted-foreground">
                 Sus comentarios generan cambios
               </p>
             </CardContent>
@@ -133,55 +136,45 @@ function RouteComponent() {
 
         {/* Success Message */}
         {showSuccess && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl shadow-md animate-in fade-in slide-in-from-top-2 duration-300">
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-semibold text-green-800 mb-1">
-                  ¡Opinión Recibida!
-                </h4>
-                <p className="text-sm text-green-700">
-                  Gracias por su participación. Su opinión ha sido registrada y 
-                  será revisada por nuestro equipo. Le notificaremos sobre cualquier 
-                  actualización relacionada.
-                </p>
-              </div>
-            </div>
-          </div>
+          <Alert className="mb-6 border-green-500 bg-green-50 dark:bg-green-950">
+            <CheckCircle2 className="h-4 w-4 text-green-600" />
+            <AlertTitle className="text-green-800 dark:text-green-200">¡Opinión Recibida!</AlertTitle>
+            <AlertDescription className="text-green-700 dark:text-green-300">
+              Gracias por su participación. Su opinión ha sido registrada y
+              será revisada por nuestro equipo. Le notificaremos sobre cualquier
+              actualización relacionada.
+            </AlertDescription>
+          </Alert>
         )}
 
         {/* Main Form Card */}
-        <Card className="shadow-2xl border-0">
+        <Card className="shadow-2xl">
           <CardContent className="p-8 md:p-10">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              <h2 className="text-2xl font-bold text-foreground mb-2">
                 Formulario de Participación
               </h2>
-              <p className="text-sm text-gray-600">
-                Los campos marcados con <span className="text-red-500">*</span> son obligatorios
+              <p className="text-sm text-muted-foreground">
+                Los campos marcados con <span className="text-destructive">*</span> son obligatorios
               </p>
             </div>
 
             {/* Info Alert */}
-            <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                <div className="text-sm text-blue-800">
-                  <p className="font-medium mb-1">Información Importante</p>
-                  <p className="text-blue-700">
-                    Sus datos personales son opcionales. Si desea recibir seguimiento 
-                    sobre su comentario, por favor proporcione su correo electrónico.
-                  </p>
-                </div>
-              </div>
-            </div>
+            <Alert className="mb-8">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Información Importante</AlertTitle>
+              <AlertDescription>
+                Sus datos personales son opcionales. Si desea recibir seguimiento
+                sobre su comentario, por favor proporcione su correo electrónico.
+              </AlertDescription>
+            </Alert>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Optional Fields Row */}
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Nombre */}
                 <div className="space-y-2">
-                  <Label htmlFor="nombre" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="nombre">
                     Nombre (Opcional)
                   </Label>
                   <Input
@@ -191,13 +184,13 @@ function RouteComponent() {
                     value={formData.nombre}
                     onChange={handleInputChange}
                     placeholder="Su nombre completo"
-                    className="h-11 border-gray-300 focus:border-[#2E7D32] focus:ring-[#2E7D32]"
+                    className="h-11"
                   />
                 </div>
 
                 {/* Correo */}
                 <div className="space-y-2">
-                  <Label htmlFor="correo" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="correo">
                     Correo Electrónico (Opcional)
                   </Label>
                   <Input
@@ -207,7 +200,7 @@ function RouteComponent() {
                     value={formData.correo}
                     onChange={handleInputChange}
                     placeholder="correo@ejemplo.com"
-                    className="h-11 border-gray-300 focus:border-[#2E7D32] focus:ring-[#2E7D32]"
+                    className="h-11"
                   />
                 </div>
               </div>
@@ -216,75 +209,78 @@ function RouteComponent() {
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Tipo de Comentario */}
                 <div className="space-y-2">
-                  <Label htmlFor="tipoComentario" className="text-sm font-medium text-gray-700">
-                    Tipo de Comentario <span className="text-red-500">*</span>
+                  <Label htmlFor="tipoComentario">
+                    Tipo de Comentario <span className="text-destructive">*</span>
                   </Label>
-                  <select
-                    id="tipoComentario"
-                    name="tipoComentario"
+                  <Select
                     value={formData.tipoComentario}
-                    onChange={handleInputChange}
-                    className="w-full h-11 px-3 border border-gray-300 rounded-lg focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 transition-all bg-white"
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, tipoComentario: value }))}
                     required
                   >
-                    <option value="">Seleccione una opción</option>
-                    <option value="sugerencia">Sugerencia</option>
-                    <option value="reporte">Reporte</option>
-                    <option value="queja">Queja</option>
-                    <option value="felicitacion">Felicitación</option>
-                    <option value="consulta">Consulta</option>
-                  </select>
+                    <SelectTrigger className="h-11">
+                      <SelectValue placeholder="Seleccione una opción" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sugerencia">Sugerencia</SelectItem>
+                      <SelectItem value="reporte">Reporte</SelectItem>
+                      <SelectItem value="queja">Queja</SelectItem>
+                      <SelectItem value="felicitacion">Felicitación</SelectItem>
+                      <SelectItem value="consulta">Consulta</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {/* Proyecto Relacionado */}
                 <div className="space-y-2">
-                  <Label htmlFor="proyectoRelacionado" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="proyectoRelacionado">
                     Proyecto Relacionado (Opcional)
                   </Label>
-                  <select
-                    id="proyectoRelacionado"
-                    name="proyectoRelacionado"
+                  <Select
                     value={formData.proyectoRelacionado}
-                    onChange={handleInputChange}
-                    className="w-full h-11 px-3 border border-gray-300 rounded-lg focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 transition-all bg-white"
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, proyectoRelacionado: value }))}
                   >
-                    <option value="">Ninguno específico</option>
-                    <option value="proyecto-1">Carretera Nacional Ruta 32</option>
-                    <option value="proyecto-2">Hospital Regional de Limón</option>
-                    <option value="proyecto-3">Acueducto Metropolitano</option>
-                    <option value="proyecto-4">Parque Nacional Corcovado</option>
-                    <option value="proyecto-5">Centro Educativo San José</option>
-                    <option value="proyecto-6">Puente Río Grande</option>
-                  </select>
+                    <SelectTrigger className="h-11">
+                      <SelectValue placeholder="Ninguno específico" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Ninguno específico</SelectItem>
+                      <SelectItem value="proyecto-1">Carretera Nacional Ruta 32</SelectItem>
+                      <SelectItem value="proyecto-2">Hospital Regional de Limón</SelectItem>
+                      <SelectItem value="proyecto-3">Acueducto Metropolitano</SelectItem>
+                      <SelectItem value="proyecto-4">Parque Nacional Corcovado</SelectItem>
+                      <SelectItem value="proyecto-5">Centro Educativo San José</SelectItem>
+                      <SelectItem value="proyecto-6">Puente Río Grande</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
               {/* Comentario */}
               <div className="space-y-2">
-                <Label htmlFor="comentario" className="text-sm font-medium text-gray-700">
-                  Comentario <span className="text-red-500">*</span>
+                <Label htmlFor="comentario">
+                  Comentario <span className="text-destructive">*</span>
                 </Label>
-                <textarea
+                <Textarea
                   id="comentario"
                   name="comentario"
                   value={formData.comentario}
                   onChange={handleInputChange}
                   placeholder="Escriba aquí su opinión, sugerencia o comentario..."
                   rows={6}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#2E7D32] focus:ring-2 focus:ring-[#2E7D32]/20 transition-all resize-none"
+                  className="resize-none"
                   required
                 />
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   Mínimo 10 caracteres. Sea específico y constructivo.
                 </p>
               </div>
 
               {/* Privacy Notice */}
-              <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                <p className="text-xs text-gray-600 leading-relaxed">
-                  Al enviar este formulario, usted acepta que su opinión sea procesada 
-                  de acuerdo con nuestra política de privacidad. Sus datos personales 
-                  (si los proporciona) serán utilizados únicamente para dar seguimiento 
+              <div className="p-4 bg-muted rounded-lg border border-border">
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Al enviar este formulario, usted acepta que su opinión sea procesada
+                  de acuerdo con nuestra política de privacidad. Sus datos personales
+                  (si los proporciona) serán utilizados únicamente para dar seguimiento
                   a su comentario y no serán compartidos con terceros.
                 </p>
               </div>
@@ -294,7 +290,7 @@ function RouteComponent() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 h-12 bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-medium text-base shadow-lg hover:shadow-xl transition-all duration-200"
+                  className="flex-1 h-12 font-medium text-base shadow-lg hover:shadow-xl transition-all duration-200"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">
@@ -315,9 +311,9 @@ function RouteComponent() {
 
         {/* Bottom Info */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-muted-foreground">
             ¿Tiene preguntas? Consulte nuestra{' '}
-            <a href="#" className="text-[#2E7D32] hover:text-[#1B5E20] font-medium">
+            <a href="#" className="text-primary hover:text-primary/80 font-medium">
               guía de participación ciudadana
             </a>
           </p>
