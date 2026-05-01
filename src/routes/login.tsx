@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useForm } from '@tanstack/react-form'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -7,60 +8,75 @@ import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { authClient } from '@/lib/auth-client'
 import { toast } from 'sonner'
-import { Database, Eye, EyeOff, FileText, Lock, Mail, Shield } from 'lucide-react'
-
+import { Database, Eye, EyeOff, FileText, Lock, Mail, Shield, AlertCircle } from 'lucide-react'
 
 export const Route = createFileRoute('/login')({
   component: RouteComponent,
 })
 
+interface LoginFormData {
+  email: string
+  password: string
+}
+
 function RouteComponent() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [authError, setAuthError] = useState<string | null>(null)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+  // TanStack Form
+  const form = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    onSubmit: async ({ value }: { value: LoginFormData }) => {
+      setIsLoading(true)
+      setAuthError(null)
 
-    try {
-      await authClient.signIn.email(
-        {
-          email,
-          password,
-          callbackURL: '/dashboard',
-        },
-        {
-          onSuccess: () => {
-            toast.success('Sesión iniciada correctamente')
+      try {
+        await authClient.signIn.email(
+          {
+            email: value.email,
+            password: value.password,
+            callbackURL: '/dashboard',
           },
-          onError: (ctx) => {
-            if (ctx.error.status === 403) {
-              toast.error('Por favor, verifique su correo electrónico')
-              return
-            }
-            toast.error(ctx.error.message || 'Error al iniciar sesión')
-          },
-        }
-      )
-    } catch (error) {
-      toast.error('Error al iniciar sesión')
-    } finally {
-      setIsLoading(false)
-    }
-  }
+          {
+            onSuccess: () => {
+              toast.success('Sesión iniciada correctamente')
+            },
+            onError: (ctx) => {
+              if (ctx.error.status === 403) {
+                setAuthError('Por favor, verifique su correo electrónico')
+                toast.error('Por favor, verifique su correo electrónico')
+                return
+              }
+              setAuthError(ctx.error.message || 'Error al iniciar sesión')
+              toast.error(ctx.error.message || 'Error al iniciar sesión')
+            },
+          }
+        )
+      } catch (error) {
+        setAuthError('Error al iniciar sesión')
+        toast.error('Error al iniciar sesión')
+      } finally {
+        setIsLoading(false)
+      }
+    },
+  })
 
   const handleForgotPassword = async () => {
-    if (!email) {
+    const emailValue = form.getFieldValue('email')
+    
+    if (!emailValue) {
       toast.error('Por favor ingrese su correo electrónico')
       return
     }
 
     try {
       await authClient.requestPasswordReset({
-        email,
+        email: emailValue,
         redirectTo: '/resetPassword',
       })
       toast.success('Se ha enviado un correo para restablecer la contraseña')
@@ -111,56 +127,109 @@ function RouteComponent() {
                   </AlertDescription>
                 </Alert>
 
+                {/* Error Alert */}
+                {authError && (
+                  <Alert variant="destructive" className="mb-6">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{authError}</AlertDescription>
+                  </Alert>
+                )}
+
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    form.handleSubmit()
+                  }}
+                  className="space-y-5"
+                >
                   {/* Email Field */}
-                  <div className="space-y-2">
-                    <Label htmlFor="email">
-                      Correo Electrónico
-                    </Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                      <Input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="usuario@gobierno.cr"
-                        className="pl-10 h-11"
-                        required
-                      />
-                    </div>
-                  </div>
+                  <form.Field
+                    name="email"
+                    validators={{
+                      onChange: ({ value }) => {
+                        if (!value) return 'El correo electrónico es requerido'
+                        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+                          return 'Correo electrónico inválido'
+                        return undefined
+                      },
+                    }}
+                  >
+                    {(field) => (
+                      <div className="space-y-2">
+                        <Label htmlFor="email">
+                          Correo Electrónico
+                        </Label>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                          <Input
+                            id="email"
+                            type="email"
+                            value={field.state.value}
+                            onChange={(e) => field.handleChange(e.target.value)}
+                            onBlur={field.handleBlur}
+                            placeholder="usuario@gobierno.cr"
+                            className="pl-10 h-11"
+                          />
+                        </div>
+                        {field.state.meta.errors.length > 0 && (
+                          <p className="text-sm text-destructive">
+                            {field.state.meta.errors[0]}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </form.Field>
 
                   {/* Password Field */}
-                  <div className="space-y-2">
-                    <Label htmlFor="password">
-                      Contraseña
-                    </Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                      <Input
-                        id="password"
-                        type={showPassword ? 'text' : 'password'}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        className="pl-10 pr-10 h-11"
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        {showPassword ? (
-                          <EyeOff className="w-5 h-5" />
-                        ) : (
-                          <Eye className="w-5 h-5" />
+                  <form.Field
+                    name="password"
+                    validators={{
+                      onChange: ({ value }) => {
+                        if (!value) return 'La contraseña es requerida'
+                        if (value.length < 8)
+                          return 'La contraseña debe tener al menos 8 caracteres'
+                        return undefined
+                      },
+                    }}
+                  >
+                    {(field) => (
+                      <div className="space-y-2">
+                        <Label htmlFor="password">
+                          Contraseña
+                        </Label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                          <Input
+                            id="password"
+                            type={showPassword ? 'text' : 'password'}
+                            value={field.state.value}
+                            onChange={(e) => field.handleChange(e.target.value)}
+                            onBlur={field.handleBlur}
+                            placeholder="••••••••"
+                            className="pl-10 pr-10 h-11"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            {showPassword ? (
+                              <EyeOff className="w-5 h-5" />
+                            ) : (
+                              <Eye className="w-5 h-5" />
+                            )}
+                          </button>
+                        </div>
+                        {field.state.meta.errors.length > 0 && (
+                          <p className="text-sm text-destructive">
+                            {field.state.meta.errors[0]}
+                          </p>
                         )}
-                      </button>
-                    </div>
-                  </div>
+                      </div>
+                    )}
+                  </form.Field>
 
                   {/* Remember Me & Forgot Password */}
                   <div className="flex items-center justify-between">

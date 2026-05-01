@@ -21,7 +21,6 @@ import {
   MapPin,
   Calendar,
   DollarSign,
-  TrendingUp,
   Grid3x3,
   List,
   ChevronLeft,
@@ -42,118 +41,9 @@ interface Project {
   endDate: string
   budget: number
   progress: number
-  image: string
   comments: number
   status: 'En Progreso' | 'Completado' | 'Planificación' | 'Pausado'
 }
-
-// Mock data
-const mockProjects: Project[] = [
-  {
-    id: '1',
-    name: 'Carretera Nacional Ruta 32',
-    description: 'Ampliación y mejoramiento de la carretera que conecta San José con Limón',
-    location: 'San José - Limón',
-    startDate: '2024-01-15',
-    endDate: '2026-12-31',
-    budget: 45000000,
-    progress: 68,
-    image: '/placeholder-road.jpg',
-    comments: 24,
-    status: 'En Progreso'
-  },
-  {
-    id: '2',
-    name: 'Hospital Regional de Limón',
-    description: 'Construcción de nuevo hospital con tecnología de punta y 200 camas',
-    location: 'Limón Centro',
-    startDate: '2023-06-01',
-    endDate: '2025-08-30',
-    budget: 78000000,
-    progress: 45,
-    image: '/placeholder-hospital.jpg',
-    comments: 56,
-    status: 'En Progreso'
-  },
-  {
-    id: '3',
-    name: 'Acueducto Metropolitano',
-    description: 'Modernización del sistema de distribución de agua potable',
-    location: 'Área Metropolitana',
-    startDate: '2024-03-01',
-    endDate: '2025-11-30',
-    budget: 32000000,
-    progress: 82,
-    image: '/placeholder-water.jpg',
-    comments: 18,
-    status: 'En Progreso'
-  },
-  {
-    id: '4',
-    name: 'Parque Nacional Corcovado',
-    description: 'Restauración y conservación de senderos y áreas protegidas',
-    location: 'Península de Osa',
-    startDate: '2023-01-10',
-    endDate: '2024-12-15',
-    budget: 8500000,
-    progress: 95,
-    image: '/placeholder-park.jpg',
-    comments: 42,
-    status: 'En Progreso'
-  },
-  {
-    id: '5',
-    name: 'Centro Educativo San José',
-    description: 'Construcción de complejo educativo con capacidad para 1500 estudiantes',
-    location: 'San José Este',
-    startDate: '2024-02-01',
-    endDate: '2026-01-31',
-    budget: 25000000,
-    progress: 35,
-    image: '/placeholder-school.jpg',
-    comments: 31,
-    status: 'En Progreso'
-  },
-  {
-    id: '6',
-    name: 'Puente Río Grande',
-    description: 'Construcción de puente vehicular y peatonal sobre el Río Grande',
-    location: 'Puntarenas',
-    startDate: '2023-09-01',
-    endDate: '2024-06-30',
-    budget: 12000000,
-    progress: 100,
-    image: '/placeholder-bridge.jpg',
-    comments: 15,
-    status: 'Completado'
-  },
-  {
-    id: '7',
-    name: 'Tren Eléctrico Fase 2',
-    description: 'Extensión del sistema de tren eléctrico hacia el oeste del valle',
-    location: 'San José - Alajuela',
-    startDate: '2025-01-01',
-    endDate: '2027-12-31',
-    budget: 95000000,
-    progress: 15,
-    image: '/placeholder-train.jpg',
-    comments: 89,
-    status: 'Planificación'
-  },
-  {
-    id: '8',
-    name: 'Planta de Tratamiento',
-    description: 'Nueva planta de tratamiento de aguas residuales con tecnología avanzada',
-    location: 'Cartago',
-    startDate: '2024-04-01',
-    endDate: '2025-10-31',
-    budget: 18500000,
-    progress: 52,
-    image: '/placeholder-plant.jpg',
-    comments: 27,
-    status: 'En Progreso'
-  }
-]
 
 function RouteComponent() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -164,9 +54,12 @@ function RouteComponent() {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 5
 
+  // Empty projects array - ready for backend integration
+  const projects: Project[] = []
+
   // Filter and search logic
   const filteredProjects = useMemo(() => {
-    return mockProjects.filter((project) => {
+    return projects.filter((project) => {
       const matchesSearch = 
         project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -185,7 +78,7 @@ function RouteComponent() {
 
       return matchesSearch && matchesStatus && matchesLocation && matchesBudget
     })
-  }, [searchTerm, statusFilter, locationFilter, budgetFilter])
+  }, [projects, searchTerm, statusFilter, locationFilter, budgetFilter])
 
   // Pagination
   const totalPages = Math.ceil(filteredProjects.length / itemsPerPage)
@@ -223,6 +116,13 @@ function RouteComponent() {
       default:
         return 'outline'
     }
+  }
+
+  const handleClearFilters = () => {
+    setSearchTerm('')
+    setStatusFilter('all')
+    setLocationFilter('all')
+    setBudgetFilter('all')
   }
 
   return (
@@ -563,18 +463,15 @@ function RouteComponent() {
                 No se encontraron proyectos
               </h3>
               <p className="text-muted-foreground mb-4">
-                Intenta ajustar los filtros o el término de búsqueda
+                {projects.length === 0 
+                  ? 'No hay proyectos disponibles en este momento'
+                  : 'Intenta ajustar los filtros o el término de búsqueda'}
               </p>
-              <Button
-                onClick={() => {
-                  setSearchTerm('')
-                  setStatusFilter('all')
-                  setLocationFilter('all')
-                  setBudgetFilter('all')
-                }}
-              >
-                Limpiar Filtros
-              </Button>
+              {projects.length > 0 && (
+                <Button onClick={handleClearFilters}>
+                  Limpiar Filtros
+                </Button>
+              )}
             </CardContent>
           </Card>
         )}

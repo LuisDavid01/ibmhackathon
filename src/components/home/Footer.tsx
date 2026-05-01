@@ -6,7 +6,7 @@ export function Footer() {
           <div>
             <h3 className="font-semibold mb-3">Transparencia Costa Rica</h3>
             <p className="text-sm text-muted-foreground">
-              Plataforma oficial para el seguimiento de proyectos públicos en Costa Rica.
+              Plataforma oficial para el seguimiento de proyectos municipalidades públicas en Costa Rica.
             </p>
           </div>
           <div>

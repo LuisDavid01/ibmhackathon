@@ -31,11 +31,11 @@ export const mockProject: Project = {
 }
 
 export const mockMilestones: Milestone[] = [
-  { id: "1", title: "Aprobación de planos", date: "15 Ene 2024", status: "completed" },
-  { id: "2", title: "Movimiento de tierras", date: "28 Feb 2024", status: "completed" },
-  { id: "3", title: "Cimentación", date: "15 Abr 2024", status: "active" },
-  { id: "4", title: "Instalaciones", date: "30 Jun 2024", status: "pending" },
-  { id: "5", title: "Entrega final", date: "15 Sep 2024", status: "pending" }
+  { id: "1", title: "Aprobación de planos", date: "15 Ene 2026", status: "completed" },
+  { id: "2", title: "Movimiento de tierras", date: "28 Feb 2026", status: "completed" },
+  { id: "3", title: "Cimentación", date: "15 Abr 2026", status: "active" },
+  { id: "4", title: "Instalaciones", date: "30 Jun 2026", status: "pending" },
+  { id: "5", title: "Entrega final", date: "15 Sep 2026", status: "pending" }
 ]
 
 export const mockBudget: BudgetCategory[] = [
@@ -77,9 +77,9 @@ export const mockDocuments: Document[] = [
 ]
 
 export const mockVersions: TechnicalVersion[] = [
-  { version: "v2.1", date: "28 Abr 2024", notes: "Actualización de cronograma y presupuesto" },
-  { version: "v2.0", date: "15 Mar 2024", notes: "Revisión estructural aprobada" },
-  { version: "v1.5", date: "10 Feb 2024", notes: "Ajustes en especificaciones técnicas" }
+  { version: "v2.1", date: "28 Abr 2026", notes: "Actualización de cronograma y presupuesto" },
+  { version: "v2.0", date: "15 Mar 2026", notes: "Revisión estructural aprobada" },
+  { version: "v1.5", date: "10 Feb 2026", notes: "Ajustes en especificaciones técnicas" }
 ]
 
 export const mockRelatedProjects: RelatedProject[] = [
