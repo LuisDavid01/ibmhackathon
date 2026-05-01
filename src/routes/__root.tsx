@@ -1,10 +1,14 @@
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
 import appCss from "../styles.css?url"
 import { Toaster } from "sonner"
-
+const queryClient = new QueryClient()
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -37,6 +41,7 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
+     <QueryClientProvider client={queryClient}>
     <html lang="en">
       <head>
         <HeadContent />
@@ -58,5 +63,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
+    </QueryClientProvider>
   )
 }

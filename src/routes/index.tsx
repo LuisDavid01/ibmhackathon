@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, Navigate } from "@tanstack/react-router"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Link } from "@tanstack/react-router"
@@ -6,6 +6,7 @@ import { Link } from "@tanstack/react-router"
 // Import components
 import { Navbar } from "@/components/home/Navbar"
 import { Footer } from "@/components/home/Footer"
+import { authClient } from "@/lib/auth-client"
 
 export const Route = createFileRoute("/")({ component: ProjectDetailPage })
 
@@ -14,6 +15,9 @@ export const Route = createFileRoute("/")({ component: ProjectDetailPage })
 // ============================================================================
 
 function ProjectDetailPage() {
+
+ 
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
