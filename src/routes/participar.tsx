@@ -8,7 +8,6 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { toast } from 'sonner'
 import {
   MessageSquare,
   Send,
@@ -16,7 +15,8 @@ import {
   AlertCircle,
   Users,
   FileText,
-  Shield
+  Shield,
+  Loader2
 } from 'lucide-react'
 
 export const Route = createFileRoute('/participar')({
@@ -34,6 +34,7 @@ interface ParticipacionFormData {
 function RouteComponent() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   // TanStack Form
   const form = useForm({
@@ -46,19 +47,25 @@ function RouteComponent() {
     },
     onSubmit: async ({ value }: { value: ParticipacionFormData }) => {
       setIsSubmitting(true)
+      setSubmitError(null)
 
-      // Simulate API call - replace with actual backend call when ready
-      setTimeout(() => {
-        setIsSubmitting(false)
-        setShowSuccess(true)
-        toast.success('¡Opinión enviada exitosamente!')
+      try {
+        // TODO: Replace with actual backend call when available
+        // Example: await crearParticipacion({ data: value })
         
-        // Reset form
+        // Simulating API call for now
+        await new Promise((resolve) => setTimeout(resolve, 1500))
+        
+        setShowSuccess(true)
         form.reset()
 
         // Hide success message after 5 seconds
         setTimeout(() => setShowSuccess(false), 5000)
-      }, 1500)
+      } catch (error) {
+        setSubmitError('Error al enviar la opinión. Por favor, intente nuevamente.')
+      } finally {
+        setIsSubmitting(false)
+      }
     },
   })
 
@@ -128,6 +135,14 @@ function RouteComponent() {
               será revisada por nuestro equipo. Le notificaremos sobre cualquier
               actualización relacionada.
             </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Error Message */}
+        {submitError && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{submitError}</AlertDescription>
           </Alert>
         )}
 
@@ -275,6 +290,7 @@ function RouteComponent() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="">Ninguno específico</SelectItem>
+                          {/* TODO: Load projects from backend when available */}
                         </SelectContent>
                       </Select>
                     </div>
@@ -290,6 +306,8 @@ function RouteComponent() {
                     if (!value) return 'El comentario es requerido'
                     if (value.length < 10)
                       return 'El comentario debe tener al menos 10 caracteres'
+                    if (value.length > 1000)
+                      return 'El comentario no debe exceder 1000 caracteres'
                     return undefined
                   },
                 }}
@@ -314,7 +332,7 @@ function RouteComponent() {
                       </p>
                     )}
                     <p className="text-xs text-muted-foreground">
-                      Mínimo 10 caracteres. Sea específico y constructivo.
+                      {field.state.value.length}/1000 caracteres. Mínimo 10 caracteres.
                     </p>
                   </div>
                 )}
@@ -339,7 +357,7 @@ function RouteComponent() {
                 >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <Loader2 className="w-5 h-5 animate-spin" />
                       Enviando...
                     </span>
                   ) : (

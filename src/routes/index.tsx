@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Link } from "@tanstack/react-router"
 
 // Import components
 import { Navbar } from "@/components/home/Navbar"
@@ -13,22 +14,11 @@ export const Route = createFileRoute("/")({ component: ProjectDetailPage })
 // ============================================================================
 
 function ProjectDetailPage() {
-  const [showOpinionForm, setShowOpinionForm] = useState(false)
-
-  // Empty state - ready for backend integration
-  const project = null
-  const milestones = []
-  const budgetCategories = []
-  const activities = []
-  const documents = []
-  const versions = []
-  const relatedProjects = []
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      {/* Hero Section - Empty State */}
+      {/* Hero Section */}
       <div className="relative bg-gradient-to-br from-primary to-primary/80 text-primary-foreground py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl">
@@ -38,12 +28,24 @@ function ProjectDetailPage() {
             <p className="text-lg opacity-90 mb-6">
               Sistema de seguimiento y gestión de proyectos gubernamentales
             </p>
+            <div className="flex flex-wrap gap-4">
+              <Link to="/proyectos">
+                <Button size="lg" variant="secondary">
+                  Ver Proyectos
+                </Button>
+              </Link>
+              <Link to="/participar">
+                <Button size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                  Participar
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
       
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Left Column - Main Content */}
           <div className="lg:col-span-2 space-y-6">
@@ -70,9 +72,12 @@ function ProjectDetailPage() {
                       d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                     />
                   </svg>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground mb-4">
                     No hay proyectos disponibles en este momento
                   </p>
+                  <Link to="/proyectos">
+                    <Button>Explorar Proyectos</Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
@@ -146,14 +151,13 @@ function ProjectDetailPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Comparte tu opinión sobre este proyecto
+                  Comparta su opinión sobre los proyectos gubernamentales
                 </p>
-                <button
-                  onClick={() => setShowOpinionForm(!showOpinionForm)}
-                  className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-                >
-                  Dar mi Opinión
-                </button>
+                <Link to="/participar">
+                  <Button className="w-full">
+                    Dar mi Opinión
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 
@@ -219,9 +223,12 @@ function ProjectDetailPage() {
                   d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                 />
               </svg>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground mb-4">
                 Los proyectos relacionados aparecerán aquí
               </p>
+              <Link to="/proyectos">
+                <Button variant="outline">Ver Todos los Proyectos</Button>
+              </Link>
             </CardContent>
           </Card>
         </div>
