@@ -12,7 +12,7 @@ import { useForm } from '@tanstack/react-form'
 import { toast } from 'sonner'
 import type { CommentData } from '@/types'
 
-export const Route = createFileRoute('/dashboard/comentarios')({
+export const Route = createFileRoute('/_auth/dashboard/comentarios')({
   component: RouteComponent,
 })
 

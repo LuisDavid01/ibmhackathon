@@ -12,18 +12,12 @@ import { useForm } from '@tanstack/react-form'
 import { toast } from 'sonner'
 import type { UserInsert } from '@/types'
 
-export const Route = createFileRoute('/dashboard/usuarios')({
+export const Route = createFileRoute('/_auth/dashboard/usuarios')({
   component: RouteComponent,
 })
 
 type UserRole = 'admin' | 'user'
 
-interface UserFormData {
-  name: string
-  email: string
-  password: string
-  role: UserRole
-}
 
 interface ExtendedUser {
   id: string
@@ -67,7 +61,7 @@ function RouteComponent() {
         toast.error(response.message)
       }
     },
-    onError: () => {
+    onError: (error) => {
       toast.error('Error al crear el usuario')
     },
   })
@@ -128,9 +122,10 @@ function RouteComponent() {
             {usersData?.total || 0} usuarios registrados
           </div>
         </div>
-        <Users className="absolute right-8 top-0 size-32 opacity-5" />
+        
         <NeoBrutalButton onClick={() => setIsCreateModalOpen(true)}>
-          Nuevo Usuario
+          <Users className="absolute right-2 top-1/2 -translate-y-1/2 size-5 opacity-20" />
+          <span className="relative z-10">Nuevo Usuario</span>
         </NeoBrutalButton>
       </div>
 

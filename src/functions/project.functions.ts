@@ -1,3 +1,4 @@
+import { ensureSession } from '@/lib/auth.functions'
 import { MUTATIONS } from '@/server/mutations.server'
 import { QUERIES } from '@/server/queries.server'
 import type { ProyectData } from '@/types'
@@ -29,6 +30,10 @@ export const buscarProyectos = createServerFn({ method: 'GET' })
 export const crearProyecto = createServerFn({ method: 'POST' })
   .inputValidator((data: ProyectData) => data)
   .handler(async ({ data }) => {
+        const session = await ensureSession();
+    if(session.user.role !== 'admin') {
+      throw new Error('No tienes permiso para crear usuarios')
+    }
     console.log("creando proyecto")
     return await MUTATIONS.createProyect(data)
   })
@@ -36,12 +41,20 @@ export const crearProyecto = createServerFn({ method: 'POST' })
 export const actualizarProyecto = createServerFn({ method: 'POST' })
   .inputValidator((data: { id: number, data: Partial<ProyectData> }) => data)
   .handler(async ({ data }) => {
+        const session = await ensureSession();
+    if(session.user.role !== 'admin') {
+      throw new Error('No tienes permiso para crear usuarios')
+    }
     return await MUTATIONS.updateProyect(data.id, data.data)
   })
 
 export const eliminarProyecto = createServerFn({ method: 'POST' })
   .inputValidator((data: { id: number }) => data)
   .handler(async ({ data }) => {
+        const session = await ensureSession();
+    if(session.user.role !== 'admin') {
+      throw new Error('No tienes permiso para crear usuarios')
+    }
     return await MUTATIONS.deleteProyect(data.id)
   })
 

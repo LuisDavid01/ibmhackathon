@@ -14,7 +14,7 @@ import { useForm } from '@tanstack/react-form'
 import { toast } from 'sonner'
 import type { ProyectData } from '@/types'
 
-export const Route = createFileRoute('/dashboard/')({
+export const Route = createFileRoute('/_auth/dashboard/')({
   component: RouteComponent,
 })
 

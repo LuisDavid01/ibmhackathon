@@ -1,3 +1,4 @@
+import { ensureSession } from '@/lib/auth.functions'
 import { MUTATIONS } from '@/server/mutations.server'
 import { QUERIES } from '@/server/queries.server'
 import type { UserInsert } from '@/types'
@@ -16,6 +17,10 @@ export const getUsuarios = createServerFn({ method: 'GET' })
 export const crearUsuarios = createServerFn({ method: 'POST' })
   .inputValidator((data: UserInsert) => data)
   .handler(async ({ data }) => {
+    const session = await ensureSession();
+    if(session.user.role !== 'admin') {
+      throw new Error('No tienes permiso para crear usuarios')
+    }
     return await MUTATIONS.createUser(data)
   })
 
@@ -25,6 +30,10 @@ export const crearUsuarios = createServerFn({ method: 'POST' })
 export const actualizarUsuario = createServerFn({ method: 'POST' })
   .inputValidator((data: { id: string, data: Partial<UserInsert> }) => data)
   .handler(async ({ data }) => {
+        const session = await ensureSession();
+    if(session.user.role !== 'admin') {
+      throw new Error('No tienes permiso para crear usuarios')
+    }
     // TODO: Implement when backend MUTATIONS.updateUser is available
     return {
       success: false,
@@ -35,6 +44,10 @@ export const actualizarUsuario = createServerFn({ method: 'POST' })
 export const eliminarUsuario = createServerFn({ method: 'POST' })
   .inputValidator((data: { id: string }) => data)
   .handler(async ({ data }) => {
+        const session = await ensureSession();
+    if(session.user.role !== 'admin') {
+      throw new Error('No tienes permiso para crear usuarios')
+    }
     // TODO: Implement when backend MUTATIONS.deleteUser is available
     return {
       success: false,

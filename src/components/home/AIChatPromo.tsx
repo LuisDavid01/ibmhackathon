@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { Link } from "@tanstack/react-router"
 import { Bot, Check } from "lucide-react"
 
 export function AIChatPromo() {
@@ -25,12 +26,15 @@ export function AIChatPromo() {
             </p>
 
             {/* CTA Button */}
+            <Link to="/asistente">
             <Button 
               size="lg"
-              className="bg-secondary text-black border-2 border-white font-bold text-lg px-8 py-6 hover:bg-accent transition-colors"
+              variant={"outline"}
+              className="text-black"
             >
               Probar el asistente IA
             </Button>
+            </Link>
 
             {/* Features List */}
             <div className="space-y-3 pt-4">

@@ -39,18 +39,22 @@ export function HeroSection() {
                 Explorar Proyectos
               </Button>
             </Link>
+          <Link 
+          to="/asistente">
             <Button 
               size="lg"
               variant="outline"
               className="bg-transparent border-2 border-black font-bold text-lg px-8 py-6 hover:bg-black hover:text-white transition-all"
             >
+              
               Hablar con la IA
             </Button>
+            </Link>
           </div>
 
           {/* Stats Row */}
           <div className="flex flex-wrap justify-center gap-6 pt-8 text-sm font-mono text-black/60">
-            <span className="font-bold">438 Proyectos</span>
+            <span className="font-bold">El repositorio mas grande de proyectos publicos en Costa Rica</span>
             <span>·</span>
             <span className="font-bold">₡2.1T Fiscalizados</span>
             <span>·</span>
@@ -58,25 +62,7 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Decorative Icons */}
-        <div className="absolute top-32 left-10 opacity-10 hidden lg:block">
-          <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
-          </svg>
-        </div>
-        <div className="absolute top-48 right-16 opacity-10 hidden lg:block">
-          <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M3 3v18h18" />
-            <path d="m19 9-5 5-4-4-3 3" />
-          </svg>
-        </div>
-        <div className="absolute bottom-32 right-32 opacity-10 hidden lg:block">
-          <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-            <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-          </svg>
-        </div>
+
       </div>
     </section>
   )

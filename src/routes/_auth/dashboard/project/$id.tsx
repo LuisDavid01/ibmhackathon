@@ -21,7 +21,7 @@ import { toast } from 'sonner'
 import type { ProyectData, ProjectChangeData } from '@/types'
 import { authClient } from '@/lib/auth-client'
 
-export const Route = createFileRoute('/dashboard/project/$id')({
+export const Route = createFileRoute('/_auth/dashboard/project/$id')({
   component: RouteComponent,
 })
 

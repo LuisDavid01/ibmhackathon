@@ -9,7 +9,7 @@ interface NeoBrutalButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const NeoBrutalButton = forwardRef<HTMLButtonElement, NeoBrutalButtonProps>(
   ({ className, variant = 'primary', size = 'md', children, ...props }, ref) => {
-    const baseStyles = 'rounded-none font-mono font-bold uppercase tracking-wide transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed'
+    const baseStyles = 'relative rounded-none font-mono font-bold uppercase tracking-wide transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed'
     
     const variantStyles = {
       primary: 'border-2 border-foreground bg-background shadow-[4px_4px_0px_0px_hsl(var(--foreground))] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]',

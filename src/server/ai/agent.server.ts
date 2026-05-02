@@ -26,7 +26,7 @@ export const runAgent = async ({ userMessage, prevMessages, tools }: RunAgentInp
 
     if (response.content) {
       // Retornar solo los mensajes nuevos generados en esta sesión
-      return prevMessages.slice(initialMessageCount);
+      return prevMessages.slice(initialMessageCount + 1);
     }
 
     if (response.tool_calls && response.tool_calls.length > 0) {

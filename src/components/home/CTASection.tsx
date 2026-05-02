@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { Link } from "@tanstack/react-router"
 import { Bot } from "lucide-react"
 
 export function CTASection() {
@@ -25,12 +26,14 @@ export function CTASection() {
           </p>
 
           {/* CTA Button */}
+          <Link to="/asistente">
           <Button 
             size="lg"
             className="bg-primary text-white border-2 border-black font-bold text-lg px-10 py-7 shadow-[6px_6px_0_black] hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px] transition-all"
           >
             Iniciar conversación
           </Button>
+          </Link>
 
           {/* Features Text */}
           <p className="text-xs font-mono text-muted-foreground pt-2">

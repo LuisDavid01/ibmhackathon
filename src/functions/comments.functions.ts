@@ -33,16 +33,6 @@ export const crearComment = createServerFn({ method: 'POST' })
     return await MUTATIONS.createComment(data)
   })
 
-export const actualizarComment = createServerFn({ method: 'POST' })
-  .inputValidator((data: { id: number, data: Partial<CommentData> }) => data)
-  .handler(async ({ data }) => {
-    return await MUTATIONS.updateComment(data.id, data.data)
-  })
 
-export const eliminarComment = createServerFn({ method: 'POST' })
-  .inputValidator((data: { id: number }) => data)
-  .handler(async ({ data }) => {
-    return await MUTATIONS.deleteComment(data.id)
-  })
 
 // Made with Bob
