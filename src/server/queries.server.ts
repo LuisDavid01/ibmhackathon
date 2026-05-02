@@ -281,35 +281,7 @@ export const QUERIES = {
         }
     },
 
-    getCommentsByOwnerId: async function (ownerId: string, limit: number, offset: number): Promise<DataPagination<any>> {
-        try {
-            // Get total count
-            const totalResult = await db
-                .select({ count: count() })
-                .from(comments_table)
-                .where(eq(comments_table.ownerId, ownerId))
-            const total = totalResult[0]?.count || 0
 
-            // Get paginated data
-            const data = await db
-                .select()
-                .from(comments_table)
-                .where(eq(comments_table.ownerId, ownerId))
-                .orderBy(desc(comments_table.createdAt))
-                .limit(limit)
-                .offset(offset)
-
-            return {
-                data: data,
-                total: total,
-                limit: limit,
-                offset: (offset / limit) + 1,
-                totalPages: Math.ceil(total / limit),
-            }
-        } catch (error) {
-            throw error
-        }
-    },
 
     searchComments: async function (searchTerm: string, limit: number, offset: number): Promise<DataPagination<any>> {
         try {

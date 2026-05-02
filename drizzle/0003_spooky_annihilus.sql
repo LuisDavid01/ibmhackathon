@@ -1,0 +1,1 @@
+ALTER TABLE "proyectos_changes" RENAME COLUMN "changeState" TO "change_state";

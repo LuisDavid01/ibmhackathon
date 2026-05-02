@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, bigint, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import { pgTable, bigint, text, timestamp, boolean, index, pgEnum } from "drizzle-orm/pg-core";
 
 
 export const comments_table = pgTable(
@@ -8,17 +8,11 @@ export const comments_table = pgTable(
     id: bigint("id", { mode: "number"})
       .primaryKey()
       .generatedAlwaysAsIdentity(),
-      // id del usuario
-    ownerId: text("owner_id").notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
     title: text("name").notNull(),
     content: text("content").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
-  (table) => [index("comments_userId_idx").on(table.ownerId),
-    index("comments_title_idx").on(table.title),
-
-  ],
+  (table) => [index("comments_title_idx").on(table.title)],
 );
 
 export const proyects = pgTable(
@@ -57,11 +51,17 @@ export const proyect_changes = pgTable(
   proyectId: bigint("proyect_id", { mode: "number"}).notNull()
   .references(() => proyects.id, { onDelete: "cascade" }),
   changeTitle: text("change_title").notNull(),
-
+  changeState: text("change_state")
+  .notNull()
+  .default("preparacion"),
   userId: text("user_id").notNull()
   .references(() => user.id, { onDelete: "cascade" }),
   details: text("details").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
   budgetSpent: bigint("budget_spent", { mode: "number"}).notNull(),
 
   },
@@ -171,12 +171,7 @@ export const accountRelations = relations(account, ({ one }) => ({
   }),
 }));
 
-export const commentsRelations = relations(comments_table, ({ one }) => ({
-  user: one(user, {
-    fields: [comments_table.ownerId],
-    references: [user.id],
-  }),
-}));
+
 
 export const proyectChangesRelations = relations(proyect_changes, ({ one }) => ({
   user: one(user, {

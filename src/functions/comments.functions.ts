@@ -17,11 +17,7 @@ export const getCommentById = createServerFn({ method: 'GET' })
     return await QUERIES.getCommentById(data.id)
   })
 
-export const getCommentsByOwnerId = createServerFn({ method: 'GET' })
-  .inputValidator((data: { ownerId: string, limit: number, offset: number }) => data)
-  .handler(async ({ data }) => {
-    return await QUERIES.getCommentsByOwnerId(data.ownerId, data.limit, data.offset)
-  })
+
 
 export const buscarComments = createServerFn({ method: 'GET' })
   .inputValidator((data: { searchTerm: string, limit: number, offset: number }) => data)

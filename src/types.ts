@@ -52,7 +52,6 @@ export type ProjectChangeData = z.infer<typeof ProjectChangeSchema>
 
 // Zod Schema for Comment
 export const CommentSchema = z.object({
-    ownerId: z.string({ required_error: 'El ID del propietario es requerido', invalid_type_error: 'ID del propietario inválido' }),
     title: z.string({ required_error: 'El título es requerido', invalid_type_error: 'Título inválido' }).min(1, 'El título no debe estar vacío').max(255, 'El título no debe exceder 255 caracteres'),
     content: z.string({ required_error: 'El contenido es requerido', invalid_type_error: 'Contenido inválido' }).min(1, 'El contenido no debe estar vacío').max(5000, 'El contenido no debe exceder 5000 caracteres'),
 })

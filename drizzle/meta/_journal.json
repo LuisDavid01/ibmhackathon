@@ -15,6 +15,27 @@
       "when": 1777669188962,
       "tag": "0001_absent_fat_cobra",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777734307969,
+      "tag": "0002_perfect_trish_tilby",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1777734619525,
+      "tag": "0003_spooky_annihilus",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1777734816022,
+      "tag": "0004_stale_living_mummy",
+      "breakpoints": true
     }
   ]
 }
