@@ -1,0 +1,1 @@
+ALTER TABLE "proyectos" ADD COLUMN "status" text DEFAULT 'pending' NOT NULL;

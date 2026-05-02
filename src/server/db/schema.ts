@@ -26,6 +26,7 @@ export const proyects = pgTable(
   description: text("description").notNull(),
   company: text("company").notNull(),
   location: text("location").notNull(),
+  status: text("status").notNull().default("pending"),
   municipalidad: text("municipality").notNull(),
   budget: bigint("budget", { mode: "number"}).notNull(),
   startedAt: timestamp("started_at").notNull().defaultNow(),

@@ -36,6 +36,13 @@
       "when": 1777734816022,
       "tag": "0004_stale_living_mummy",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1777741279026,
+      "tag": "0005_eager_mandroid",
+      "breakpoints": true
     }
   ]
 }

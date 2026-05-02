@@ -16,6 +16,7 @@ export const clientAgent = createServerFn({ method: 'POST' })
         tools: tools
       })
 
+      // retorna los nuevos mensajes para actualizar el estado del ciente de react
       return {
         success: true,
         data: newMessages,

@@ -33,6 +33,10 @@ export const ProyectSchema = z.object({
     location: z.string({ required_error: 'La ubicación es requerida', invalid_type_error: 'Ubicación inválida' }).min(1, 'La ubicación no debe estar vacía').max(255, 'La ubicación no debe exceder 255 caracteres'),
     municipalidad: z.string({ required_error: 'La municipalidad es requerida', invalid_type_error: 'Municipalidad inválida' }).min(1, 'La municipalidad no debe estar vacía').max(255, 'La municipalidad no debe exceder 255 caracteres'),
     budget: z.number({ required_error: 'El presupuesto es requerido', invalid_type_error: 'Presupuesto inválido' }).min(0, 'El presupuesto debe ser mayor o igual a 0'),
+    status: z.enum(['pending', 'in progress', 'done', 'canceled'], {
+        required_error: 'El estado es requerido',
+        invalid_type_error: 'Estado inválido'
+    }).default('pending'),
 })
 
 // Infer type from Zod schema

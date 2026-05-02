@@ -17,6 +17,8 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AsistenteIndexRouteImport } from './routes/asistente/index'
 import { Route as ProyectoIdRouteImport } from './routes/proyecto/$id'
 import { Route as DashboardUsuariosRouteImport } from './routes/dashboard/usuarios'
+import { Route as DashboardComentariosRouteImport } from './routes/dashboard/comentarios'
+import { Route as DashboardProjectIdRouteImport } from './routes/dashboard/project/$id'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const ProyectosRoute = ProyectosRouteImport.update({
@@ -59,6 +61,16 @@ const DashboardUsuariosRoute = DashboardUsuariosRouteImport.update({
   path: '/dashboard/usuarios',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardComentariosRoute = DashboardComentariosRouteImport.update({
+  id: '/dashboard/comentarios',
+  path: '/dashboard/comentarios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardProjectIdRoute = DashboardProjectIdRouteImport.update({
+  id: '/dashboard/project/$id',
+  path: '/dashboard/project/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -70,22 +82,26 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/participar': typeof ParticiparRoute
   '/proyectos': typeof ProyectosRoute
+  '/dashboard/comentarios': typeof DashboardComentariosRoute
   '/dashboard/usuarios': typeof DashboardUsuariosRoute
   '/proyecto/$id': typeof ProyectoIdRoute
   '/asistente/': typeof AsistenteIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/dashboard/project/$id': typeof DashboardProjectIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/participar': typeof ParticiparRoute
   '/proyectos': typeof ProyectosRoute
+  '/dashboard/comentarios': typeof DashboardComentariosRoute
   '/dashboard/usuarios': typeof DashboardUsuariosRoute
   '/proyecto/$id': typeof ProyectoIdRoute
   '/asistente': typeof AsistenteIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/dashboard/project/$id': typeof DashboardProjectIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -93,11 +109,13 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/participar': typeof ParticiparRoute
   '/proyectos': typeof ProyectosRoute
+  '/dashboard/comentarios': typeof DashboardComentariosRoute
   '/dashboard/usuarios': typeof DashboardUsuariosRoute
   '/proyecto/$id': typeof ProyectoIdRoute
   '/asistente/': typeof AsistenteIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/dashboard/project/$id': typeof DashboardProjectIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -106,33 +124,39 @@ export interface FileRouteTypes {
     | '/login'
     | '/participar'
     | '/proyectos'
+    | '/dashboard/comentarios'
     | '/dashboard/usuarios'
     | '/proyecto/$id'
     | '/asistente/'
     | '/dashboard/'
     | '/api/auth/$'
+    | '/dashboard/project/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/participar'
     | '/proyectos'
+    | '/dashboard/comentarios'
     | '/dashboard/usuarios'
     | '/proyecto/$id'
     | '/asistente'
     | '/dashboard'
     | '/api/auth/$'
+    | '/dashboard/project/$id'
   id:
     | '__root__'
     | '/'
     | '/login'
     | '/participar'
     | '/proyectos'
+    | '/dashboard/comentarios'
     | '/dashboard/usuarios'
     | '/proyecto/$id'
     | '/asistente/'
     | '/dashboard/'
     | '/api/auth/$'
+    | '/dashboard/project/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -140,11 +164,13 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ParticiparRoute: typeof ParticiparRoute
   ProyectosRoute: typeof ProyectosRoute
+  DashboardComentariosRoute: typeof DashboardComentariosRoute
   DashboardUsuariosRoute: typeof DashboardUsuariosRoute
   ProyectoIdRoute: typeof ProyectoIdRoute
   AsistenteIndexRoute: typeof AsistenteIndexRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  DashboardProjectIdRoute: typeof DashboardProjectIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -205,6 +231,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardUsuariosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/comentarios': {
+      id: '/dashboard/comentarios'
+      path: '/dashboard/comentarios'
+      fullPath: '/dashboard/comentarios'
+      preLoaderRoute: typeof DashboardComentariosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/project/$id': {
+      id: '/dashboard/project/$id'
+      path: '/dashboard/project/$id'
+      fullPath: '/dashboard/project/$id'
+      preLoaderRoute: typeof DashboardProjectIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -220,11 +260,13 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ParticiparRoute: ParticiparRoute,
   ProyectosRoute: ProyectosRoute,
+  DashboardComentariosRoute: DashboardComentariosRoute,
   DashboardUsuariosRoute: DashboardUsuariosRoute,
   ProyectoIdRoute: ProyectoIdRoute,
   AsistenteIndexRoute: AsistenteIndexRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  DashboardProjectIdRoute: DashboardProjectIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
