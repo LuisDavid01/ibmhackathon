@@ -2,8 +2,8 @@ import { MUTATIONS } from '@/server/mutations.server'
 import { QUERIES } from '@/server/queries.server'
 import type { ProyectData } from '@/types'
 import { createServerFn } from '@tanstack/react-start'
-import { runAgent } from '@/server/ai/agent'
-import { tools } from '@/server/ai/tools'
+import { runAgent } from '@/server/ai/agent.server'
+import { tools } from '@/server/ai/tools/index.server'
 
 // Query functions
 
@@ -54,7 +54,8 @@ export const consultarProyectoConIA = createServerFn({ method: 'POST' })
       const { message, conversationHistory = [] } = data
       
       // Run the AI agent with the user's message
-      const response = await runAgent({
+      // runAgent now returns AIMessage[] with only the new messages generated in this session
+      const newMessages = await runAgent({
         userMessage: message,
         prevMessages: conversationHistory,
         tools: tools
@@ -62,14 +63,14 @@ export const consultarProyectoConIA = createServerFn({ method: 'POST' })
 
       return {
         success: true,
-        response: response,
+        messages: newMessages,
         message: 'Consulta procesada exitosamente'
       }
     } catch (error) {
       console.error('Error in consultarProyectoConIA:', error)
       return {
         success: false,
-        response: 'Lo siento, ocurrió un error al procesar tu consulta. Por favor, intenta de nuevo.',
+        messages: [],
         message: 'Error al procesar la consulta',
         error: error instanceof Error ? error.message : 'Error desconocido'
       }

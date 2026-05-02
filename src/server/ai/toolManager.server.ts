@@ -1,5 +1,5 @@
 import type OpenAI from "openai";
-import { lookProyectInfo, lookProyectToolDefinition } from "./tools/lookProyectInformation";
+import { lookProyectInfo, lookProyectToolDefinition } from "./tools/lookProyectInformation.server";
 
 
 

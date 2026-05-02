@@ -2,7 +2,7 @@
 import type { AIMessage } from "@/types"
 import { zodFunction } from 'openai/helpers/zod'
 import {OpenAI} from "openai"
-import { defaultSystemPrompt } from "./systemPrompt"
+import { defaultSystemPrompt } from "./systemPrompt.server"
 const ai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 })
