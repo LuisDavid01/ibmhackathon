@@ -352,4 +352,101 @@ export const QUERIES = {
             throw error
         }
     },
+
+    // AI Tool queries
+    
+    lookProyectWithInfo: async function (projectName: string, location: string): Promise<any> {
+        try {
+            const searchNamePattern = `%${projectName}%`
+            const searchLocationPattern = `%${location}%`
+
+            // Search for projects with their changes using LEFT JOIN
+            const results = await db
+                .select({
+                    // Project fields
+                    projectId: proyects.id,
+                    projectName: proyects.name,
+                    projectDescription: proyects.description,
+                    projectCompany: proyects.company,
+                    projectLocation: proyects.location,
+                    projectMunicipalidad: proyects.municipalidad,
+                    projectBudget: proyects.budget,
+                    projectStartedAt: proyects.startedAt,
+                    // Change fields (can be null if no changes)
+                    changeId: proyect_changes.id,
+                    changeTitle: proyect_changes.changeTitle,
+                    changeDetails: proyect_changes.details,
+                    changeCreatedAt: proyect_changes.createdAt,
+                    changeBudgetSpent: proyect_changes.budgetSpent,
+                    changeUserId: proyect_changes.userId,
+                })
+                .from(proyects)
+                .leftJoin(proyect_changes, eq(proyects.id, proyect_changes.proyectId))
+                .where(
+                    or(
+                        ilike(proyects.name, searchNamePattern),
+                        ilike(proyects.location, searchLocationPattern)
+                    )
+                )
+                .orderBy(desc(proyects.startedAt), desc(proyect_changes.createdAt))
+                .limit(100) // Limit total rows to prevent excessive data
+
+            if (results.length === 0) {
+                return {
+                    found: false,
+                    message: 'No se encontró ningún proyecto con ese nombre o ubicación'
+                }
+            }
+
+            // Group results by project
+            const projectsMap = new Map()
+            
+            results.forEach(row => {
+                if (!projectsMap.has(row.projectId)) {
+                    projectsMap.set(row.projectId, {
+                        id: row.projectId,
+                        name: row.projectName,
+                        description: row.projectDescription,
+                        company: row.projectCompany,
+                        location: row.projectLocation,
+                        municipalidad: row.projectMunicipalidad,
+                        budget: row.projectBudget,
+                        startedAt: row.projectStartedAt,
+                        changes: [],
+                        totalBudgetSpent: 0,
+                    })
+                }
+
+                // Add change if exists
+                if (row.changeId) {
+                    const project = projectsMap.get(row.projectId)
+                    project.changes.push({
+                        id: row.changeId,
+                        changeTitle: row.changeTitle,
+                        details: row.changeDetails,
+                        createdAt: row.changeCreatedAt,
+                        budgetSpent: row.changeBudgetSpent,
+                        userId: row.changeUserId,
+                    })
+                    project.totalBudgetSpent += Number(row.changeBudgetSpent)
+                }
+            })
+
+            // Convert map to array and add calculated fields
+            const projectsWithChanges = Array.from(projectsMap.values()).map(project => ({
+                ...project,
+                budgetRemaining: Number(project.budget) - project.totalBudgetSpent,
+                changesCount: project.changes.length,
+                budgetUsedPercentage: ((project.totalBudgetSpent / Number(project.budget)) * 100).toFixed(2)
+            }))
+
+            return {
+                found: true,
+                count: projectsWithChanges.length,
+                projects: projectsWithChanges
+            }
+        } catch (error) {
+            throw error
+        }
+    },
 }

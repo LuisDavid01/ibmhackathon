@@ -1,4 +1,5 @@
 import type OpenAI from "openai";
+import { lookProyectInfo, lookProyectToolDefinition } from "./tools/lookProyectInformation";
 
 
 
@@ -16,6 +17,8 @@ export async function execTool(
     }
 
     switch (toolcall.function.name) {
+        case lookProyectToolDefinition.name:
+            return await lookProyectInfo(userInput)
 
         default:
             return `Stop dont call this tool again ${toolcall.function.name}`

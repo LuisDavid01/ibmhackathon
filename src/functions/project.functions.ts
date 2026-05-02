@@ -2,6 +2,8 @@ import { MUTATIONS } from '@/server/mutations.server'
 import { QUERIES } from '@/server/queries.server'
 import type { ProyectData } from '@/types'
 import { createServerFn } from '@tanstack/react-start'
+import { runAgent } from '@/server/ai/agent'
+import { tools } from '@/server/ai/tools'
 
 // Query functions
 
@@ -41,6 +43,37 @@ export const eliminarProyecto = createServerFn({ method: 'POST' })
   .inputValidator((data: { id: number }) => data)
   .handler(async ({ data }) => {
     return await MUTATIONS.deleteProyect(data.id)
+  })
+
+// AI Agent function
+
+export const consultarProyectoConIA = createServerFn({ method: 'POST' })
+  .inputValidator((data: { message: string, conversationHistory?: any[] }) => data)
+  .handler(async ({ data }) => {
+    try {
+      const { message, conversationHistory = [] } = data
+      
+      // Run the AI agent with the user's message
+      const response = await runAgent({
+        userMessage: message,
+        prevMessages: conversationHistory,
+        tools: tools
+      })
+
+      return {
+        success: true,
+        response: response,
+        message: 'Consulta procesada exitosamente'
+      }
+    } catch (error) {
+      console.error('Error in consultarProyectoConIA:', error)
+      return {
+        success: false,
+        response: 'Lo siento, ocurrió un error al procesar tu consulta. Por favor, intenta de nuevo.',
+        message: 'Error al procesar la consulta',
+        error: error instanceof Error ? error.message : 'Error desconocido'
+      }
+    }
   })
 
 // Made with Bob
