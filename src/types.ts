@@ -1,5 +1,6 @@
 
 
+import type OpenAI from 'openai'
 import { z } from 'zod'
 
 export type UserInsert = {
@@ -58,3 +59,18 @@ export const CommentSchema = z.object({
 
 // Infer type from Zod schema
 export type CommentData = z.infer<typeof CommentSchema>
+
+
+
+
+
+// types for ai
+
+export type AIMessage =
+  | OpenAI.Chat.Completions.ChatCompletionAssistantMessageParam
+  | { role: 'user'; content: string }
+  | { role: 'tool'; content: string; tool_call_id: string }
+
+export interface ToolFn<A = any, T = any> {
+  (input: { userMessage: string; toolArgs: A }): Promise<T>
+}
