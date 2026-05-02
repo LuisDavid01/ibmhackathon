@@ -1,5 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import { Building2, LayoutDashboard, FolderOpen, Users, MessageCircle, Home, LogOut } from 'lucide-react'
+import { LayoutDashboard, Users, MessageCircle, Home, LogOut } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
 
 interface DashboardLayoutProps {
@@ -21,7 +21,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <aside className="w-64 border-r-2 border-border bg-background flex flex-col">
         {/* Header */}
         <div className="border-b-2 border-border p-6">
-          <Building2 className="size-8 mb-2" />
+          <img src="/logo.png" alt="TransparenciaCR" className="h-8 w-8 mb-2" />
           <div className="font-mono text-xs tracking-widest text-muted-foreground">
             TRANSPARENCIA
           </div>
@@ -34,9 +34,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <nav className="flex-1">
           <NavLink to="/dashboard" icon={<LayoutDashboard className="size-5" />}>
             Dashboard
-          </NavLink>
-          <NavLink to="/dashboard" icon={<FolderOpen className="size-5" />}>
-            Proyectos
           </NavLink>
           <NavLink to="/dashboard/usuarios" icon={<Users className="size-5" />}>
             Usuarios
@@ -89,13 +86,7 @@ function NavLink({ to, icon, children }: NavLinkProps) {
   return (
     <Link
       to={to}
-      className="flex items-center gap-3 px-4 py-3 border-b border-border font-mono text-sm uppercase tracking-wide transition-colors"
-      activeProps={{
-        className: 'bg-foreground text-background border-l-4 border-primary',
-      }}
-      inactiveProps={{
-        className: 'hover:bg-muted',
-      }}
+      className="flex items-center gap-3 px-4 py-3 border-b border-border font-mono text-sm uppercase tracking-wide transition-colors hover:bg-muted"
     >
       {icon}
       {children}

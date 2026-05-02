@@ -122,9 +122,6 @@ function RouteComponent() {
             <thead className="bg-foreground text-background">
               <tr>
                 <th className="font-mono text-xs uppercase tracking-widest px-4 py-3 text-left border-r-2 border-background/20">
-                  #ID
-                </th>
-                <th className="font-mono text-xs uppercase tracking-widest px-4 py-3 text-left border-r-2 border-background/20">
                   Nombre
                 </th>
                 <th className="font-mono text-xs uppercase tracking-widest px-4 py-3 text-left border-r-2 border-background/20">
@@ -152,9 +149,6 @@ function RouteComponent() {
                     index % 2 === 0 ? 'even:bg-muted/30' : ''
                   }`}
                 >
-                  <td className="font-mono text-xs text-muted-foreground px-4 py-3">
-                    #PRY-{String(project.id).padStart(5, '0')}
-                  </td>
                   <td className="px-4 py-3">
                     <button
                       onClick={() => navigate({ to: `/dashboard/project/${project.id}` })}

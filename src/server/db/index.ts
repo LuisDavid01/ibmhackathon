@@ -1,6 +1,8 @@
 import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from './schema';
+import dotenv from "dotenv";
 
+dotenv.config();
 import { neon } from '@neondatabase/serverless';
 
 const globalForDb = globalThis as unknown as { 

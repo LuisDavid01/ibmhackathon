@@ -35,15 +35,7 @@ export function Navbar() {
     >
       {/* Logo */}
       <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 21l18 0" />
-          <path d="M5 21v-14l8 -4v18" />
-          <path d="M19 21v-10l-6 -4" />
-          <path d="M9 9l0 .01" />
-          <path d="M9 12l0 .01" />
-          <path d="M9 15l0 .01" />
-          <path d="M9 18l0 .01" />
-        </svg>
+        <img src="/logo.png" alt="TransparenciaCR" className="h-7 w-7" />
         <span className="text-xl font-black tracking-tight">TransparenciaCR</span>
       </Link>
 
@@ -62,6 +54,13 @@ export function Navbar() {
           activeProps={{ className: "text-primary" }}
         >
           Proyectos
+        </Link>
+        <Link
+          to="/denuncias"
+          className="text-sm font-bold hover:text-primary transition-colors"
+          activeProps={{ className: "text-primary" }}
+        >
+          Denuncias
         </Link>
         <Link to="/asistente" className="text-sm font-bold hover:text-primary transition-colors">
           IA Asistente

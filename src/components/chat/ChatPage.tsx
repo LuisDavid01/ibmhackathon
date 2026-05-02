@@ -7,6 +7,7 @@ import { ChatMessageList } from './ChatMessageList'
 import { ChatInput } from './ChatInput'
 import { AlertTriangle } from 'lucide-react'
 import { Navbar } from '../home'
+import { toast } from 'sonner'
 
 const MESSAGE_LIMIT = 50
 
@@ -46,7 +47,9 @@ export function ChatPage() {
           content: response.message || 'Error al procesar la consulta. Intenta de nuevo.'
         }
         setMessages([...updatedMessages, errorMsg])
+        console.log(error)
         setError(response.message || 'Error desconocido')
+        toast.error(response.message)
       }
     } catch (err) {
       // Handle network or unexpected errors

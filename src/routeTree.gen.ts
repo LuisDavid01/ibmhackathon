@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProyectosRouteImport } from './routes/proyectos'
 import { Route as ParticiparRouteImport } from './routes/participar'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as DenunciasRouteImport } from './routes/denuncias'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AsistenteIndexRouteImport } from './routes/asistente/index'
@@ -35,6 +36,11 @@ const ParticiparRoute = ParticiparRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DenunciasRoute = DenunciasRouteImport.update({
+  id: '/denuncias',
+  path: '/denuncias',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
@@ -85,6 +91,7 @@ const AuthDashboardProjectIdRoute = AuthDashboardProjectIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/denuncias': typeof DenunciasRoute
   '/login': typeof LoginRoute
   '/participar': typeof ParticiparRoute
   '/proyectos': typeof ProyectosRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/denuncias': typeof DenunciasRoute
   '/login': typeof LoginRoute
   '/participar': typeof ParticiparRoute
   '/proyectos': typeof ProyectosRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteRouteWithChildren
+  '/denuncias': typeof DenunciasRoute
   '/login': typeof LoginRoute
   '/participar': typeof ParticiparRoute
   '/proyectos': typeof ProyectosRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/denuncias'
     | '/login'
     | '/participar'
     | '/proyectos'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/denuncias'
     | '/login'
     | '/participar'
     | '/proyectos'
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_auth'
+    | '/denuncias'
     | '/login'
     | '/participar'
     | '/proyectos'
@@ -170,6 +182,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  DenunciasRoute: typeof DenunciasRoute
   LoginRoute: typeof LoginRoute
   ParticiparRoute: typeof ParticiparRoute
   ProyectosRoute: typeof ProyectosRoute
@@ -199,6 +212,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/denuncias': {
+      id: '/denuncias'
+      path: '/denuncias'
+      fullPath: '/denuncias'
+      preLoaderRoute: typeof DenunciasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -288,6 +308,7 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
+  DenunciasRoute: DenunciasRoute,
   LoginRoute: LoginRoute,
   ParticiparRoute: ParticiparRoute,
   ProyectosRoute: ProyectosRoute,

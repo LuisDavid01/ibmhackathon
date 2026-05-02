@@ -4,9 +4,9 @@ import { NeoBrutalButton } from '@/components/dashboard/NeoBrutalButton'
 import { NeoBrutalInput } from '@/components/dashboard/NeoBrutalInput'
 import { NeoBrutalModal } from '@/components/dashboard/NeoBrutalModal'
 import { NeoBrutalTextarea } from '@/components/dashboard/NeoBrutalTextarea'
-import { MessageCircle, Trash2, Edit } from 'lucide-react'
+import { MessageCircle } from 'lucide-react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getComments, crearComment, actualizarComment, eliminarComment } from '@/functions/comments.functions'
+import { getComments, crearComment } from '@/functions/comments.functions'
 import { useState } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { toast } from 'sonner'
@@ -19,9 +19,9 @@ export const Route = createFileRoute('/_auth/dashboard/comentarios')({
 function RouteComponent() {
   const queryClient = useQueryClient()
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
-  const [editingComment, setEditingComment] = useState<any | null>(null)
+  const [selectedComment, setSelectedComment] = useState<any>(null)
+
   const [searchTerm, setSearchTerm] = useState('')
-  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null)
 
   // Fetch comments
   const { data: commentsData, isLoading } = useQuery({
@@ -42,32 +42,8 @@ function RouteComponent() {
     },
   })
 
-  // Update mutation
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<CommentData> }) =>
-      actualizarComment({ data: { id, data } }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments'] })
-      setEditingComment(null)
-      toast.success('Comentario actualizado exitosamente')
-    },
-    onError: () => {
-      toast.error('Error al actualizar el comentario')
-    },
-  })
 
-  // Delete mutation
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => eliminarComment({ data: { id } }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments'] })
-      setDeleteConfirmId(null)
-      toast.success('Comentario eliminado exitosamente')
-    },
-    onError: () => {
-      toast.error('Error al eliminar el comentario')
-    },
-  })
+
 
   // Filter comments
   const filteredComments = commentsData?.data?.filter((comment: any) => {
@@ -118,9 +94,7 @@ function RouteComponent() {
           <table className="w-full border-collapse border-2 border-border">
             <thead className="bg-foreground text-background">
               <tr>
-                <th className="font-mono text-xs uppercase tracking-widest px-4 py-3 text-left border-r-2 border-background/20">
-                  #ID
-                </th>
+
                 <th className="font-mono text-xs uppercase tracking-widest px-4 py-3 text-left border-r-2 border-background/20">
                   Título
                 </th>
@@ -130,55 +104,25 @@ function RouteComponent() {
                 <th className="font-mono text-xs uppercase tracking-widest px-4 py-3 text-left border-r-2 border-background/20">
                   Fecha
                 </th>
-                <th className="font-mono text-xs uppercase tracking-widest px-4 py-3 text-left">
-                  Acciones
-                </th>
+
               </tr>
             </thead>
             <tbody>
               {filteredComments.map((comment: any, index: number) => (
                 <tr
                   key={comment.id}
-                  className={`border-b-2 border-border hover:bg-muted transition-colors ${
+                  onClick={() => setSelectedComment(comment)}
+                  className={`border-b-2 border-border hover:bg-muted transition-colors cursor-pointer ${
                     index % 2 === 0 ? 'even:bg-muted/30' : ''
                   }`}
                 >
-                  <td className="font-mono text-xs text-muted-foreground px-4 py-3">
-                    #{comment.id}
-                  </td>
+ 
                   <td className="px-4 py-3 font-semibold">{comment.title}</td>
                   <td className="px-4 py-3 max-w-md truncate">{comment.content}</td>
                   <td className="font-mono text-sm px-4 py-3">
                     {new Date(comment.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setEditingComment(comment)}
-                        className="border-2 border-border rounded-none p-1.5 hover:bg-muted transition-colors"
-                        title="Editar comentario"
-                      >
-                        <Edit className="size-4" />
-                      </button>
-                      {deleteConfirmId === comment.id ? (
-                        <button
-                          onClick={() => deleteMutation.mutate(comment.id)}
-                          className="border-2 border-destructive rounded-none px-2 py-1.5 font-mono text-xs text-destructive hover:bg-destructive/10 transition-colors"
-                          disabled={deleteMutation.isPending}
-                        >
-                          ¿CONFIRMAR?
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => setDeleteConfirmId(comment.id)}
-                          className="border-2 border-border rounded-none p-1.5 hover:bg-muted transition-colors"
-                          title="Eliminar comentario"
-                        >
-                          <Trash2 className="size-4" />
-                        </button>
-                      )}
-                    </div>
-                  </td>
+                  
                 </tr>
               ))}
             </tbody>
@@ -199,21 +143,61 @@ function RouteComponent() {
         />
       </NeoBrutalModal>
 
-      {/* Edit Modal */}
+      {/* View Comment Modal */}
       <NeoBrutalModal
-        isOpen={!!editingComment}
-        onClose={() => setEditingComment(null)}
-        title="Editar Comentario"
+        isOpen={!!selectedComment}
+        onClose={() => setSelectedComment(null)}
+        title="Detalle del Comentario"
       >
-        {editingComment && (
-          <CommentForm
-            initialData={editingComment}
-            onSubmit={(data) => updateMutation.mutate({ id: editingComment.id, data })}
-            onCancel={() => setEditingComment(null)}
-            isSubmitting={updateMutation.isPending}
-          />
+        {selectedComment && (
+          <div className="space-y-6">
+            {/* Title */}
+            <div>
+              <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-2">
+                Título
+              </p>
+              <h3 className="text-xl font-bold">{selectedComment.title}</h3>
+            </div>
+
+            {/* Content */}
+            <div>
+              <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-2">
+                Contenido
+              </p>
+              <div className="bg-muted border-2 border-border p-4">
+                <p className="text-sm whitespace-pre-wrap">{selectedComment.content}</p>
+              </div>
+            </div>
+
+            {/* Date */}
+            <div>
+              <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-2">
+                Fecha de Creación
+              </p>
+              <p className="font-mono text-sm">
+                {new Date(selectedComment.createdAt).toLocaleDateString('es-CR', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </p>
+            </div>
+
+            {/* Close Button */}
+            <div className="flex justify-end pt-4 border-t-2 border-border">
+              <NeoBrutalButton
+                variant="secondary"
+                onClick={() => setSelectedComment(null)}
+              >
+                Cerrar
+              </NeoBrutalButton>
+            </div>
+          </div>
         )}
       </NeoBrutalModal>
+
     </DashboardLayout>
   )
 }

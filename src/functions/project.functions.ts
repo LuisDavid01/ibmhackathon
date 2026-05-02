@@ -8,9 +8,32 @@ import { createServerFn } from '@tanstack/react-start'
 // Query functions
 
 export const getProyectos = createServerFn({ method: 'GET' })
-  .inputValidator((data: { limit: number, offset: number }) => data)
+  .inputValidator((data: {
+    limit: number,
+    offset: number,
+    filters?: {
+      name?: string,
+      municipality?: string,
+      location?: string,
+      dateFrom?: string,
+      dateTo?: string,
+      budgetMin?: number,
+      budgetMax?: number
+    }
+  }) => data)
   .handler(async ({ data }) => {
-    return await QUERIES.getProyects(data.limit, data.offset)
+    return await QUERIES.getProyects(data.limit, data.offset, data.filters)
+  })
+
+export const getProyectosOrderedByBudget = createServerFn({ method: 'GET' })
+  .inputValidator((data: { limit: number }) => data)
+  .handler(async ({ data }) => {
+    return await QUERIES.getProyectsOrderedByBudget(data.limit)
+  })
+
+export const getProyectStatistics = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    return await QUERIES.getProjectStatistics()
   })
 
 export const getProyectoById = createServerFn({ method: 'GET' })
