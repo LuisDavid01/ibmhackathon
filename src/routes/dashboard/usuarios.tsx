@@ -27,7 +27,7 @@ import { getUsuarios, crearUsuarios, actualizarUsuario, eliminarUsuario } from '
 import type { UserInsert } from '@/types'
 import { AlertCircle, Loader2, Trash2 } from 'lucide-react'
 
-export const Route = createFileRoute('/usuarios')({
+export const Route = createFileRoute('/dashboard/usuarios')({
   component: RouteComponent,
 })
 

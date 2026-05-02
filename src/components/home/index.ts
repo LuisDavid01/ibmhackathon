@@ -1,25 +1,13 @@
-// Export all types
-export * from './types'
+// Main landing page components
+export { Navbar } from "./Navbar"
+export { HeroSection } from "./HeroSection"
+export { WhyTransparency } from "./WhyTransparency"
+export { AIChatPromo } from "./AIChatPromo"
+export { RecentProjects } from "./RecentProjects"
+export { CTASection } from "./CTASection"
+export { Footer } from "./Footer"
 
-// Export all mock data
-export * from './mockData'
-
-// Export all components
-export { Navbar } from './Navbar'
-export { Footer } from './Footer'
-export { HeroSection, StatusBadge, InfoCard } from './Hero'
-export { ProgressBar } from './ProgressBar'
-export { Timeline } from './Timeline'
-export { BudgetChart } from './BudgetChart'
-export { ActivityFeed } from './ActivityFeed'
-export {
-  SidebarCard,
-  MapPlaceholder,
-  ProjectCard,
-  ParticipationCard,
-  LocationCard,
-  DocumentsCard,
-  ResponsibleEntityCard
-} from './Sidebar'
+// Utility components
+export { StatusBadge } from "./StatusBadge"
 
 // Made with Bob

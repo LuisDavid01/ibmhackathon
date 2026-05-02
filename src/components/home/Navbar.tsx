@@ -1,101 +1,104 @@
-import { Link } from "@tanstack/react-router"
+import { Link, useNavigate } from "@tanstack/react-router"
 import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react"
 import { authClient } from "@/lib/auth-client"
-import { Navigate } from "@tanstack/react-router"
 
 export function Navbar() {
 
-  const { data: session } = authClient.useSession()
-   
+  	const navigate = useNavigate()
+	const { data: session } = authClient.useSession()
+
 	async function logout() {
 		await authClient.signOut({
 			fetchOptions: {
 				onSuccess() {
-					Navigate({ to: '/login' })
+					navigate({ to: '/login' })
 				},
 			},
 		})
 	}
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
-            CR
-          </div>
-          <div>
-            <div className="text-sm font-semibold">Transparencia Costa Rica</div>
-            <div className="text-xs text-muted-foreground">Proyectos Públicos</div>
-          </div>
+    <nav
+      className={`fixed top-0 w-full z-50 px-6 py-4 flex items-center justify-between transition-all duration-300 border-b-2 border-black ${
+        scrolled ? "bg-white" : "bg-[#fff5ee]"
+      }`}
+    >
+      {/* Logo */}
+      <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 21l18 0" />
+          <path d="M5 21v-14l8 -4v18" />
+          <path d="M19 21v-10l-6 -4" />
+          <path d="M9 9l0 .01" />
+          <path d="M9 12l0 .01" />
+          <path d="M9 15l0 .01" />
+          <path d="M9 18l0 .01" />
+        </svg>
+        <span className="text-xl font-black tracking-tight">TransparenciaCR</span>
+      </Link>
+
+      {/* Center Links */}
+      <div className="hidden md:flex items-center gap-8">
+        <Link
+          to="/"
+          className="text-sm font-bold hover:text-primary transition-colors"
+          activeProps={{ className: "text-primary" }}
+        >
+          Inicio
         </Link>
-        <div className="hidden md:flex items-center gap-6">
-          <Link 
-            to="/" 
-            className="text-sm font-medium hover:text-primary transition-colors"
-            activeProps={{ className: "text-primary" }}
-          >
-            Inicio
-          </Link>
-          <Link 
-            to="/proyectos" 
-            className="text-sm font-medium hover:text-primary transition-colors"
-            activeProps={{ className: "text-primary" }}
-          >
-            Proyectos
-          </Link>
-         {session?.user?.id ? (
-						<>
-							<Link
-								to="/usuarios"
-								className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-							>
-								Entrar a tu espacio
-							</Link>
-
-							<Button
-								size="sm"
-								onClick={logout}
-							>
-								Cerrar Sesión
-							</Button>
-						</>
-
-					) : (
-						<>
-
-							<Link
-								to='/login'
-							>
-								<Button size="sm">Iniciar Sesión</Button>
-
-							</Link>
-						</>
-					)}
-
-
-          <Link 
-            to="/participar" 
-            className="text-sm font-medium hover:text-primary transition-colors"
-            activeProps={{ className: "text-primary" }}
-          >
-            Participar
-          </Link>
-          <Link 
-            to="/login" 
-            className="text-sm font-medium hover:text-primary transition-colors"
-            activeProps={{ className: "text-primary" }}
-          >
-            Acceso Institucional
-          </Link>
-        </div>
-        <Link to="/login">
-          <Button size="sm" className="bg-primary hover:bg-primary/90">
-            Iniciar Sesión
-          </Button>
+        <Link
+          to="/proyectos"
+          className="text-sm font-bold hover:text-primary transition-colors"
+          activeProps={{ className: "text-primary" }}
+        >
+          Proyectos
         </Link>
+        <Link to="/asistente" className="text-sm font-bold hover:text-primary transition-colors">
+          IA Asistente
+        </Link>
+
       </div>
+
+      {/* CTA Button */}
+      {session?.user?.id ? (
+        <div className="">
+      <Link to="/dashboard">
+        <Button
+          className="mr-3 bg-secondary text-black border-2 border-black font-bold shadow-[3px_3px_0_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
+        >
+          Entra a tu espacio
+        </Button>
+      </Link>
+
+
+        <Button
+        onClick={logout}
+        variant={"secondary"}
+          className=" text-black border-2 border-black font-bold shadow-[3px_3px_0_black] hover:shadow-none hover:bg-red-400 hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
+        >
+          Cierra session
+        </Button>
+
+      </div>
+      ) : (
+      <Link to="/login">
+        <Button
+          className="bg-secondary text-black border-2 border-black font-bold shadow-[3px_3px_0_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
+        >
+          Login
+        </Button>
+      </Link>
+      )}
     </nav>
   )
 }
-
-// Made with Bob

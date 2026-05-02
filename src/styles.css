@@ -131,3 +131,46 @@
     @apply font-sans;
     }
 }
+
+@layer utilities {
+  /* Neo-brutal utilities */
+  .neo-shadow {
+    box-shadow: 6px 6px 0 hsl(var(--border));
+  }
+  
+  .neo-shadow-sm {
+    box-shadow: 3px 3px 0 hsl(var(--border));
+  }
+  
+  .neo-shadow-lg {
+    box-shadow: 8px 8px 0 hsl(var(--border));
+  }
+  
+  .neo-shadow-black {
+    box-shadow: 6px 6px 0 black;
+  }
+  
+  .neo-shadow-black-sm {
+    box-shadow: 3px 3px 0 black;
+  }
+  
+  .neo-shadow-black-lg {
+    box-shadow: 8px 8px 0 black;
+  }
+  
+  /* Hover effect for neo-brutal elements */
+  .neo-hover:hover {
+    box-shadow: none;
+    transform: translate(6px, 6px);
+  }
+  
+  .neo-hover-sm:hover {
+    box-shadow: none;
+    transform: translate(3px, 3px);
+  }
+  
+  .neo-hover-lg:hover {
+    box-shadow: none;
+    transform: translate(8px, 8px);
+  }
+}
