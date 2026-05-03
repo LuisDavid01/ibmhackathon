@@ -3,7 +3,6 @@ import { runAgent } from "@/server/ai/agent.server"
 import { tools } from "@/server/ai/tools/index.server"
 import { createServerFn } from "@tanstack/react-start"
 import {
-  getRequest,
   getRequestHeader,
 
 } from '@tanstack/react-start/server'
