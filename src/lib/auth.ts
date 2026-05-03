@@ -5,7 +5,6 @@ import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { admin } from "better-auth/plugins"
 
 export const auth = betterAuth({
-	baseURL: "http://localhost:3000",
 	emailAndPassword: {
 		enabled: true,
 	},
